@@ -11,6 +11,7 @@ class Settings(BaseSettings):
         alias="DATABASE_URL",
     )
     google_api_key: str = Field(default="", alias="GOOGLE_API_KEY")
+    prompt_dir: str = Field(default="prompts", alias="PROMPT_DIR")
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
