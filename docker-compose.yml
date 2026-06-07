@@ -3,7 +3,7 @@ services:
     build: .
     environment:
       APP_NAME: ${APP_NAME:-Semantic Resume Matcher}
-      DATABASE_URL: ${DATABASE_URL:-postgresql://resume_matcher:resume_matcher@postgres:5432/resume_matcher}
+      DATABASE_URL: ${DATABASE_URL:-postgresql+psycopg://resume_matcher:resume_matcher@postgres:5432/resume_matcher}
       GOOGLE_API_KEY: ${GOOGLE_API_KEY:-}
     ports:
       - "8000:8000"
