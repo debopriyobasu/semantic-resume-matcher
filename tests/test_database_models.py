@@ -24,6 +24,7 @@ def test_candidate_model_columns_match_milestone_one_contract() -> None:
         "education",
         "location",
         "resume_path",
+        "original_filename",
         "pipeline_status",
         "created_at",
         "updated_at",

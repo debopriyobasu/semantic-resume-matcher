@@ -16,8 +16,9 @@ class Candidate(Base):
         primary_key=True,
         default=uuid.uuid4,
     )
-    name: Mapped[str] = mapped_column(Text)
+    name: Mapped[str | None] = mapped_column(Text)
     email: Mapped[str | None] = mapped_column(Text, index=True)
+    original_filename: Mapped[str] = mapped_column(Text)
     skills: Mapped[list[str]] = mapped_column(JSONB, default=list)
     experience_years: Mapped[int | None] = mapped_column(Integer)
     education: Mapped[str | None] = mapped_column(Text)
