@@ -1,0 +1,27 @@
+services:
+  api:
+    build: .
+    environment:
+      APP_NAME: ${APP_NAME:-Semantic Resume Matcher}
+      DATABASE_URL: ${DATABASE_URL:-postgresql://resume_matcher:resume_matcher@postgres:5432/resume_matcher}
+      GOOGLE_API_KEY: ${GOOGLE_API_KEY:-}
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./uploads:/app/uploads
+    depends_on:
+      - postgres
+
+  postgres:
+    image: pgvector/pgvector:pg15
+    environment:
+      POSTGRES_DB: resume_matcher
+      POSTGRES_USER: resume_matcher
+      POSTGRES_PASSWORD: resume_matcher
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
