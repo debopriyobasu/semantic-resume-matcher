@@ -1,12 +1,13 @@
 import os
 import uuid
 
-from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, Form
+from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile, BackgroundTasks
 from sqlalchemy.orm import Session
 
 from src.db.session import get_db
 from src.repositories.candidate_repository import create_candidate
 from src.schemas.upload import UploadResumeResponse
+from src.services.pipeline_service import run_pipeline
 
 router = APIRouter(tags=["upload"])
 
@@ -15,6 +16,7 @@ ALLOWED_MIME_TYPES = {"application/pdf"}
 
 @router.post("/upload-resume", response_model=UploadResumeResponse, status_code=200)
 async def upload_resume(
+    background_tasks: BackgroundTasks,
     file: UploadFile = File(...),
     desired_salary: int | None = Form(None),
     visa_required: bool | None = Form(None),
@@ -57,6 +59,8 @@ async def upload_resume(
         preferred_location=preferred_location,
         preferred_remote=preferred_remote,
     )
+    
+    background_tasks.add_task(run_pipeline, candidate.candidate_id)
     
     return UploadResumeResponse(
         candidate_id=candidate.candidate_id,

@@ -28,6 +28,10 @@ def test_candidate_model_columns_match_milestone_one_contract() -> None:
         "pipeline_status",
         "created_at",
         "updated_at",
+        "desired_salary",
+        "visa_required",
+        "preferred_location",
+        "preferred_remote",
     }
 
 

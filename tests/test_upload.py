@@ -1,7 +1,7 @@
 import io
 import os
 import uuid
-from unittest.mock import Mock
+from unittest.mock import Mock, patch
 
 import pytest
 from fastapi.testclient import TestClient
@@ -31,6 +31,11 @@ def setup_teardown():
     for f in os.listdir("uploads"):
         if f.endswith(".pdf"):
             os.remove(os.path.join("uploads", f))
+
+@pytest.fixture(autouse=True)
+def mock_pipeline():
+    with patch("src.api.upload.run_pipeline") as mock:
+        yield mock
 
 def test_upload_valid_pdf() -> None:
     file_content = b"%PDF-1.4\nMock content"
