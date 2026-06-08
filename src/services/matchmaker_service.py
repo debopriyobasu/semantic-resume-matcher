@@ -14,6 +14,7 @@ from src.models.candidate import Candidate
 from src.models.job_posting import JobPosting
 from src.repositories import match_result_repository
 from src.schemas.matchmaker import MatchEvaluation
+from src.core.metrics import metrics_store
 
 logger = logging.getLogger(__name__)
 
@@ -79,6 +80,10 @@ class MatchmakerService:
                         "standout_strengths": evaluation.standout_strengths,
                     }
                 )
+                
+                metrics_store.record_match_confidence(evaluation.confidence)
+                metrics_store.increment_match_category(evaluation.match_category)
+                
             except MatchmakingError as e:
                 logger.error(f"Failed to evaluate match {match.match_id}: {e}")
                 # We could set status to FAILED or leave it PENDING

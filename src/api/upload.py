@@ -1,13 +1,17 @@
 import os
 import uuid
+import logging
 
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile, BackgroundTasks
 from sqlalchemy.orm import Session
+
+logger = logging.getLogger(__name__)
 
 from src.db.session import get_db
 from src.repositories.candidate_repository import create_candidate
 from src.schemas.upload import UploadResumeResponse
 from src.services.pipeline_service import run_pipeline
+from src.core.metrics import metrics_store
 
 router = APIRouter(tags=["upload"])
 
@@ -24,6 +28,8 @@ async def upload_resume(
     preferred_remote: bool | None = Form(None),
     db: Session = Depends(get_db)
 ) -> UploadResumeResponse:
+    logger.info("Upload request received")
+    
     if file.content_type not in ALLOWED_MIME_TYPES:
         raise HTTPException(status_code=400, detail="Only PDF files are allowed")
     
@@ -59,6 +65,8 @@ async def upload_resume(
         preferred_location=preferred_location,
         preferred_remote=preferred_remote,
     )
+    
+    metrics_store.increment_pipeline_status("PENDING")
     
     background_tasks.add_task(run_pipeline, candidate.candidate_id)
     

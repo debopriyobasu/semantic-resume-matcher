@@ -5,6 +5,7 @@ from src.repositories import search_repository
 from src.models.match_result import MatchResult
 from src.models.job_posting import JobPosting
 from src.models.candidate import Candidate
+from src.core.metrics import metrics_store
 
 
 class SearchService:
@@ -40,6 +41,9 @@ class SearchService:
             elif candidate.preferred_remote and not job.remote_ok:
                 category = "REJECTED"
                 reason = "REMOTE_MISMATCH"
+
+            if category == "REJECTED":
+                metrics_store.increment_match_category("REJECTED")
 
             # Create a MatchResult with placeholder values for future milestones
             match_result = MatchResult(
