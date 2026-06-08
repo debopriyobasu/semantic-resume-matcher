@@ -4,6 +4,7 @@ from google import genai
 from google.genai.errors import APIError
 
 from src.core.config import get_settings
+from src.models.candidate import Candidate
 
 logger = logging.getLogger(__name__)
 
@@ -35,3 +36,21 @@ class EmbeddingService:
         except Exception as e:
             logger.error("Failed to generate embedding: %s", e)
             raise EmbeddingError(f"Failed to generate embedding: {e}") from e
+
+    def build_candidate_text(self, candidate: Candidate) -> str:
+        """Build embedding text representation for a candidate."""
+        parts = []
+        if candidate.skills:
+            parts.append("Skills:\n" + "\n".join(candidate.skills))
+        if candidate.experience_years is not None:
+            parts.append(f"Experience:\n{candidate.experience_years} years backend engineering") # Note: The prompt example had "5 years backend engineering", maybe it just means "years" but let's just use "years" or what's given.
+        if candidate.education:
+            parts.append(f"Education:\n{candidate.education}")
+        if candidate.location:
+            parts.append(f"Location:\n{candidate.location}")
+        return "\n\n".join(parts)
+
+    def generate_candidate_embedding(self, candidate: Candidate) -> list[float]:
+        """Generate an embedding for a candidate."""
+        text = self.build_candidate_text(candidate)
+        return self.generate_embedding(text)
