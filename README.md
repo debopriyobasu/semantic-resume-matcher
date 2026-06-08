@@ -96,11 +96,6 @@ Ranked Match Results
 ```text
 semantic-resume-matcher/
 
-├── architecture.md
-├── tasks.md
-├── implementation_plan.md
-├── agent_rules.md
-
 ├── src/
 │   ├── api/
 │   ├── services/
@@ -358,26 +353,6 @@ This improves reliability and reduces cost.
 * Job scraping integrations
 * Scheduled re-matching
 * Explainable match highlighting
-
----
-
-## Documentation
-
-Project specifications:
-
-* `architecture.md`
-* `tasks.md`
-* `implementation_plan.md`
-* `agent_rules.md`
-
-These files are intended to be used with coding agents such as:
-
-* ChatGPT Codex
-* Claude Code
-* Gemini CLI
-* Cursor
-* Cline
-* Roo Code
 
 ---
 
