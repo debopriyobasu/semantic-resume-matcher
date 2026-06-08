@@ -1,7 +1,7 @@
 import os
 import uuid
 
-from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
+from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, Form
 from sqlalchemy.orm import Session
 
 from src.db.session import get_db
@@ -16,6 +16,10 @@ ALLOWED_MIME_TYPES = {"application/pdf"}
 @router.post("/upload-resume", response_model=UploadResumeResponse, status_code=200)
 async def upload_resume(
     file: UploadFile = File(...),
+    desired_salary: int | None = Form(None),
+    visa_required: bool | None = Form(None),
+    preferred_location: str | None = Form(None),
+    preferred_remote: bool | None = Form(None),
     db: Session = Depends(get_db)
 ) -> UploadResumeResponse:
     if file.content_type not in ALLOWED_MIME_TYPES:
@@ -44,7 +48,15 @@ async def upload_resume(
             buffer.write(content)
             
     original_filename = file.filename or "unknown.pdf"
-    candidate = create_candidate(db, resume_path=resume_path, original_filename=original_filename)
+    candidate = create_candidate(
+        db, 
+        resume_path=resume_path, 
+        original_filename=original_filename,
+        desired_salary=desired_salary,
+        visa_required=visa_required,
+        preferred_location=preferred_location,
+        preferred_remote=preferred_remote,
+    )
     
     return UploadResumeResponse(
         candidate_id=candidate.candidate_id,

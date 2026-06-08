@@ -27,9 +27,9 @@ class MatchResult(Base):
         index=True,
     )
     vector_score: Mapped[float] = mapped_column(Float)
-    confidence: Mapped[float] = mapped_column(Float)
+    confidence: Mapped[float | None] = mapped_column(Float, nullable=True)
     match_category: Mapped[str] = mapped_column(Text)
-    reasoning: Mapped[str] = mapped_column(Text)
+    reasoning: Mapped[str | None] = mapped_column(Text, nullable=True)
     skill_gaps: Mapped[list[str]] = mapped_column(JSONB, default=list)
     standout_strengths: Mapped[list[str]] = mapped_column(JSONB, default=list)
     created_at: Mapped[datetime] = mapped_column(

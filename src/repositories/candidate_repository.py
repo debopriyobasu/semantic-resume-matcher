@@ -4,10 +4,22 @@ from src.models.candidate import Candidate
 from src.schemas.candidate import CandidateProfile
 
 
-def create_candidate(db: Session, resume_path: str, original_filename: str) -> Candidate:
+def create_candidate(
+    db: Session, 
+    resume_path: str, 
+    original_filename: str,
+    desired_salary: int | None = None,
+    visa_required: bool | None = None,
+    preferred_location: str | None = None,
+    preferred_remote: bool | None = None,
+) -> Candidate:
     candidate = Candidate(
         resume_path=resume_path,
         original_filename=original_filename,
+        desired_salary=desired_salary,
+        visa_required=visa_required,
+        preferred_location=preferred_location,
+        preferred_remote=preferred_remote,
         pipeline_status="PENDING",
     )
     db.add(candidate)

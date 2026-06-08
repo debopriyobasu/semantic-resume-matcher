@@ -30,7 +30,9 @@ def run():
     
     print("\n---------------------------------------------------------")
     print(f"Top {len(results)} jobs for candidate {candidate_id}:")
-    for idx, (job, score) in enumerate(results, 1):
+    for idx, result in enumerate(results, 1):
+        job = result["job"]
+        score = result["score"]
         print(f"{idx}. Score: {score:.4f} | Job ID: {job.job_id} | Title: {job.title}")
 
     # Verify persistence

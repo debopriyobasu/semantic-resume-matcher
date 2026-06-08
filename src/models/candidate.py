@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime
 
-from sqlalchemy import DateTime, Integer, Text, func
+from sqlalchemy import Boolean, DateTime, Integer, Text, func
 from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -23,6 +23,10 @@ class Candidate(Base):
     experience_years: Mapped[int | None] = mapped_column(Integer)
     education: Mapped[str | None] = mapped_column(Text)
     location: Mapped[str | None] = mapped_column(Text)
+    desired_salary: Mapped[int | None] = mapped_column(Integer)
+    visa_required: Mapped[bool | None] = mapped_column(Boolean, nullable=True)
+    preferred_location: Mapped[str | None] = mapped_column(Text)
+    preferred_remote: Mapped[bool | None] = mapped_column(Boolean, nullable=True)
     resume_path: Mapped[str] = mapped_column(Text)
     pipeline_status: Mapped[str] = mapped_column(Text, default="PENDING")
     created_at: Mapped[datetime] = mapped_column(
