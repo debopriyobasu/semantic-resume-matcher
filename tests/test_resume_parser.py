@@ -58,3 +58,41 @@ def test_extract_text_corrupt_pdf(parser):
     ):
         with pytest.raises(ResumeParseError, match="Corrupt or invalid PDF"):
             parser.extract_text(b"not a pdf")
+
+
+def test_extract_profile_happy_path(parser):
+    with patch("src.services.resume_parser.genai.Client") as MockClient:
+        mock_client = MockClient.return_value
+        mock_response = MagicMock()
+        mock_response.text = '{"name": "John Doe", "email": "john@example.com", "skills": ["Python"], "experience_years": 5, "education": "BSc", "location": "Remote"}'
+        mock_client.models.generate_content.return_value = mock_response
+
+        profile = parser.extract_profile("fake resume text")
+        
+        assert profile.name == "John Doe"
+        assert profile.email == "john@example.com"
+        assert profile.skills == ["Python"]
+        assert profile.experience_years == 5
+
+def test_extract_profile_validation_failure(parser):
+    with patch("src.services.resume_parser.genai.Client") as MockClient:
+        mock_client = MockClient.return_value
+        mock_response = MagicMock()
+        # Missing skills which is a required list field, though it has default_factory it might just use it.
+        # Let's send an invalid type for experience_years
+        mock_response.text = '{"name": "John", "experience_years": "five years"}'
+        mock_client.models.generate_content.return_value = mock_response
+
+        with pytest.raises(ResumeParseError, match="Failed to validate extracted profile"):
+            parser.extract_profile("fake text")
+
+def test_extract_profile_empty_response(parser):
+    with patch("src.services.resume_parser.genai.Client") as MockClient:
+        mock_client = MockClient.return_value
+        mock_response = MagicMock()
+        mock_response.text = ""
+        mock_client.models.generate_content.return_value = mock_response
+
+        with pytest.raises(ResumeParseError, match="Received empty response from Gemini"):
+            parser.extract_profile("fake text")
+

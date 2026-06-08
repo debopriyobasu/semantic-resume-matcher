@@ -1,11 +1,12 @@
 import os
 import uuid
-from fastapi import APIRouter, UploadFile, File, HTTPException, Depends
+
+from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 from sqlalchemy.orm import Session
 
 from src.db.session import get_db
-from src.schemas.upload import UploadResumeResponse
 from src.repositories.candidate_repository import create_candidate
+from src.schemas.upload import UploadResumeResponse
 
 router = APIRouter(tags=["upload"])
 

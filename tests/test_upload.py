@@ -6,9 +6,8 @@ from unittest.mock import Mock
 import pytest
 from fastapi.testclient import TestClient
 
-from src.main import app
 from src.db.session import get_db
-from src.models.candidate import Candidate
+from src.main import app
 
 client = TestClient(app)
 
