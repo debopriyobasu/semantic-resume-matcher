@@ -1,0 +1,11 @@
+{
+  "title": "Senior Python Engineer",
+  "company": "FastAPI Tech Inc",
+  "location": "New York",
+  "remote_ok": true,
+  "visa_sponsorship": true,
+  "min_salary": 110000,
+  "max_salary": 140000,
+  "required_skills": ["Python", "FastAPI", "PostgreSQL"],
+  "description": "We are looking for a Python Backend Developer with FastAPI experience."
+}

@@ -217,6 +217,51 @@ Returns:
 
 ---
 
+## Demo
+
+Here is a quick walkthrough of the core features via `curl`. Ensure the application and database are running and bootstrapped first (`docker compose up` and `make bootstrap`).
+
+### 1. Upload Resume
+
+Upload a PDF resume with optional candidate preferences:
+
+```bash
+curl -X POST "http://localhost:8000/upload-resume" \
+  -F "file=@resume.pdf" \
+  -F "desired_salary=120000" \
+  -F "visa_required=false" \
+  -F "preferred_location=San Francisco, CA" \
+  -F "preferred_remote=true"
+```
+
+*Save the returned `candidate_id` for the next steps.*
+
+### 2. Candidate Status
+
+Check if the resume extraction and evaluation process is complete:
+
+```bash
+curl -X GET "http://localhost:8000/candidate/{candidate_id}"
+```
+
+### 3. Match Results
+
+Once the candidate status is `COMPLETE`, fetch the top job matches (this may take a few seconds if evaluating dynamically):
+
+```bash
+curl -X GET "http://localhost:8000/candidate/{candidate_id}/matches"
+```
+
+### 4. Metrics Endpoint
+
+View system-level metrics, such as total candidates processed and match statistics:
+
+```bash
+curl -X GET "http://localhost:8000/metrics"
+```
+
+---
+
 ## Local Development
 
 ### Prerequisites

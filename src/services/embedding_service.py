@@ -13,6 +13,7 @@ logger = logging.getLogger(__name__)
 
 class EmbeddingError(Exception):
     """Exception raised for errors in the embedding service."""
+
     pass
 
 
@@ -26,6 +27,7 @@ class EmbeddingService:
         start_time = time.perf_counter()
         try:
             from google.genai import types
+
             response = self.client.models.embed_content(
                 model="gemini-embedding-2",
                 contents=text,
@@ -48,7 +50,9 @@ class EmbeddingService:
         if candidate.skills:
             parts.append("Skills:\n" + "\n".join(candidate.skills))
         if candidate.experience_years is not None:
-            parts.append(f"Experience:\n{candidate.experience_years} years backend engineering") # Note: The prompt example had "5 years backend engineering", maybe it just means "years" but let's just use "years" or what's given.
+            parts.append(
+                f"Experience:\n{candidate.experience_years} years backend engineering"
+            )  # Note: The prompt example had "5 years backend engineering", maybe it just means "years" but let's just use "years" or what's given.
         if candidate.education:
             parts.append(f"Education:\n{candidate.education}")
         if candidate.location:

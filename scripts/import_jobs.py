@@ -38,9 +38,7 @@ def load_jobs(csv_path: Path = DEFAULT_CSV_PATH) -> list[dict[str, Any]]:
                 "min_salary": parse_optional_int(row["min_salary"]),
                 "max_salary": parse_optional_int(row["max_salary"]),
                 "required_skills": [
-                    skill.strip()
-                    for skill in row["required_skills"].split(";")
-                    if skill.strip()
+                    skill.strip() for skill in row["required_skills"].split(";") if skill.strip()
                 ],
                 "description": row["description"].strip(),
             }

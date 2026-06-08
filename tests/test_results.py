@@ -12,6 +12,7 @@ from src.models.match_result import MatchResult
 
 client = TestClient(app)
 
+
 @pytest.fixture(autouse=True)
 def clear_overrides():
     yield

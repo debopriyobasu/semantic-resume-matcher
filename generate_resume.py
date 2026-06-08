@@ -1,19 +1,24 @@
 from fpdf import FPDF
 
+
 class PDF(FPDF):
     def header(self):
-        self.set_font('helvetica', 'B', 15)
-        self.cell(0, 10, 'John Doe Resume', border=False, ln=1, align='C')
+        self.set_font("helvetica", "B", 15)
+        self.cell(0, 10, "John Doe Resume", border=False, ln=1, align="C")
 
     def footer(self):
         self.set_y(-15)
-        self.set_font('helvetica', 'I', 8)
-        self.cell(0, 10, f'Page {self.page_no()}', border=False, ln=1, align='C')
+        self.set_font("helvetica", "I", 8)
+        self.cell(0, 10, f"Page {self.page_no()}", border=False, ln=1, align="C")
+
 
 pdf = PDF()
 pdf.add_page()
-pdf.set_font('helvetica', '', 12)
-pdf.multi_cell(0, 10, txt="""
+pdf.set_font("helvetica", "", 12)
+pdf.multi_cell(
+    0,
+    10,
+    txt="""
 Skills:
 - Python
 - FastAPI
@@ -33,5 +38,6 @@ Education:
 
 Location: New York, USA
 Preferred Remote: True
-""")
-pdf.output('resume.pdf')
+""",
+)
+pdf.output("resume.pdf")

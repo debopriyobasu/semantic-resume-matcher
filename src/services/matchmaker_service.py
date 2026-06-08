@@ -9,12 +9,12 @@ from sqlalchemy.orm import Session
 
 from src.core.config import get_settings
 from src.core.exceptions import MatchmakingError
+from src.core.metrics import metrics_store
 from src.core.prompts import load_prompt, render_prompt
 from src.models.candidate import Candidate
 from src.models.job_posting import JobPosting
 from src.repositories import match_result_repository
 from src.schemas.matchmaker import MatchEvaluation
-from src.core.metrics import metrics_store
 
 logger = logging.getLogger(__name__)
 
@@ -33,7 +33,7 @@ class MatchmakerService:
             return
 
         evaluation_criteria = load_prompt("evaluation_criteria.md")
-        
+
         candidate_dict = {
             "skills": candidate.skills,
             "experience_years": candidate.experience_years,
@@ -63,27 +63,27 @@ class MatchmakerService:
                     "candidate_profile": candidate_profile_json,
                     "job_posting": job_posting_json,
                     "evaluation_criteria": evaluation_criteria,
-                }
+                },
             )
 
             try:
                 evaluation = self._call_gemini_with_retries(client, prompt)
-                
+
                 match_result_repository.update_match_result(
-                    db, 
-                    match.match_id, 
+                    db,
+                    match.match_id,
                     {
                         "confidence": evaluation.confidence,
                         "match_category": evaluation.match_category,
                         "reasoning": evaluation.reasoning,
                         "skill_gaps": evaluation.skill_gaps,
                         "standout_strengths": evaluation.standout_strengths,
-                    }
+                    },
                 )
-                
+
                 metrics_store.record_match_confidence(evaluation.confidence)
                 metrics_store.increment_match_category(evaluation.match_category)
-                
+
             except MatchmakingError as e:
                 logger.error(f"Failed to evaluate match {match.match_id}: {e}")
                 # We could set status to FAILED or leave it PENDING
@@ -96,13 +96,13 @@ class MatchmakerService:
         for attempt in range(max_retries + 1):
             try:
                 response = client.models.generate_content(
-                    model='gemini-2.0-flash',
+                    model="gemini-2.0-flash",
                     contents=prompt,
                     config=genai.types.GenerateContentConfig(
                         response_mime_type="application/json",
                     ),
                 )
-                
+
                 if not response.text:
                     raise MatchmakingError("Received empty response from Gemini.")
 

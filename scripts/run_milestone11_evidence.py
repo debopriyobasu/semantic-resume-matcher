@@ -1,7 +1,7 @@
 import sys
-import uuid
-import json
 from unittest.mock import patch
+
+from google import genai
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
 
@@ -10,7 +10,6 @@ from src.models.candidate import Candidate
 from src.models.match_result import MatchResult
 from src.repositories.match_result_repository import get_pending_matches
 from src.services.matchmaker_service import MatchmakerService
-from google import genai
 
 settings = get_settings()
 engine = create_engine(settings.database_url)
@@ -54,14 +53,15 @@ print("--- 7. Parsed MatchEvaluation Pydantic object ---")
 
 original_generate_content = genai.models.Models.generate_content
 
+
 def mock_generate_content(self, model, contents, config, **kwargs):
     print("=== FULLY RENDERED PROMPT ===")
     print(contents)
     print("=============================\n")
-    
+
     class MockResponse:
         def __init__(self):
-            self.text = '''```json
+            self.text = """```json
 {
   "confidence": 0.88,
   "match_category": "STRONG_MATCH",
@@ -69,16 +69,19 @@ def mock_generate_content(self, model, contents, config, **kwargs):
   "skill_gaps": ["PostgreSQL specific administration"],
   "standout_strengths": ["Docker", "Backend Engineering"]
 }
-```'''
-    
+```"""
+
     response = MockResponse()
-    
+
     print("=== RAW GEMINI RESPONSE ===")
     print(response.text)
     print("===========================\n")
     return response
 
+
 original_call = MatchmakerService._call_gemini_with_retries
+
+
 def mock_call(self, client, prompt):
     eval_obj = original_call(self, client, prompt)
     print("=== PARSED Pydantic Object ===")
@@ -86,8 +89,9 @@ def mock_call(self, client, prompt):
     print("==============================\n")
     return eval_obj
 
-with patch('google.genai.models.Models.generate_content', new=mock_generate_content):
-    with patch.object(MatchmakerService, '_call_gemini_with_retries', new=mock_call):
+
+with patch("google.genai.models.Models.generate_content", new=mock_generate_content):
+    with patch.object(MatchmakerService, "_call_gemini_with_retries", new=mock_call):
         service = MatchmakerService()
         service.evaluate_matches(db, candidate_id)
 
@@ -109,7 +113,12 @@ for m in matches_after:
         print()
 
 print("--- 9. Database verification showing updated MatchResult rows ---")
-result = db.execute(text("SELECT match_id, match_category, confidence FROM match_results WHERE candidate_id = :cid"), {"cid": candidate_id}).fetchall()
+result = db.execute(
+    text(
+        "SELECT match_id, match_category, confidence FROM match_results WHERE candidate_id = :cid"
+    ),
+    {"cid": candidate_id},
+).fetchall()
 for r in result:
     print(f"{r[0]}: {r[1]} - conf: {r[2]}")
 print()

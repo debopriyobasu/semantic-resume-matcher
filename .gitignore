@@ -5,3 +5,9 @@ __pycache__/
 .ruff_cache/
 *.py[cod]
 .env
+api_logs.txt
+metrics_after.json
+metrics_before.json
+runtime_output.txt
+runtime_output_mocked.txt
+upload_response.json

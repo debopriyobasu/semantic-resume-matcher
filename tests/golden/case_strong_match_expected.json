@@ -1,0 +1,24 @@
+{
+  "preferences": {
+    "desired_salary": 100000,
+    "visa_required": false,
+    "preferred_location": "New York",
+    "preferred_remote": true
+  },
+  "expected_category": "STRONG_MATCH",
+  "mock_gemini_profile": {
+    "name": "John Doe",
+    "email": "john.doe@example.com",
+    "skills": ["Python", "FastAPI", "PostgreSQL", "Docker"],
+    "experience_years": 5,
+    "education": "BSc Computer Science",
+    "location": "New York"
+  },
+  "mock_gemini_match": {
+    "confidence": 0.95,
+    "match_category": "STRONG_MATCH",
+    "reasoning": "Candidate has 5 years of Python experience matching FastAPI and PostgreSQL requirements.",
+    "skill_gaps": [],
+    "standout_strengths": ["Python", "FastAPI"]
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "preferences": {
+    "desired_salary": 80000,
+    "visa_required": true,
+    "preferred_location": "Boston",
+    "preferred_remote": false
+  },
+  "expected_category": "REJECTED",
+  "expected_reasoning": "VISA_MISMATCH",
+  "mock_gemini_profile": {
+    "name": "Jane Smith",
+    "email": "jane.smith@example.com",
+    "skills": ["Java", "Spring Boot", "MySQL", "AWS"],
+    "experience_years": 3,
+    "education": "BSc Software Engineering",
+    "location": "Boston"
+  }
+}

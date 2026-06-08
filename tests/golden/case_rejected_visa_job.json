@@ -1,0 +1,11 @@
+{
+  "title": "Java Engineer",
+  "company": "Finance Corp",
+  "location": "Boston",
+  "remote_ok": false,
+  "visa_sponsorship": false,
+  "min_salary": 90000,
+  "max_salary": 120000,
+  "required_skills": ["Java", "Spring Boot"],
+  "description": "We need a Java Engineer with Spring Boot experience. Visa sponsorship is not available."
+}

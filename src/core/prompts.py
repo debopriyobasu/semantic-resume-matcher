@@ -13,9 +13,7 @@ def load_prompt(prompt_name: str) -> str:
 def render_prompt(prompt_name: str, variables: dict[str, Any]) -> str:
     template = load_prompt(prompt_name)
     expected_variables = {
-        field_name
-        for _, field_name, _, _ in Formatter().parse(template)
-        if field_name is not None
+        field_name for _, field_name, _, _ in Formatter().parse(template) if field_name is not None
     }
     missing_variables = expected_variables - variables.keys()
 

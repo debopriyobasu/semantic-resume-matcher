@@ -1,0 +1,7 @@
+Jane Smith
+Java Developer
+
+Skills: Java, Spring Boot, MySQL, AWS
+Experience: 3 years of experience.
+Education: Bachelor in Software Engineering
+Location: Boston, MA

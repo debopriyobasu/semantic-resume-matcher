@@ -1,7 +1,9 @@
 import time
+
 import requests
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+
 from src.models.candidate import Candidate
 from src.models.match_result import MatchResult
 
@@ -9,19 +11,23 @@ DB_URL = "postgresql+psycopg://resume_matcher:resume_matcher@localhost:5432/resu
 engine = create_engine(DB_URL)
 SessionLocal = sessionmaker(bind=engine)
 
+
 def run():
     print("=== 1. Upload API response ===")
     start_time = time.time()
     with open("resume.pdf", "rb") as f:
-        resp = requests.post("http://localhost:8001/upload-resume", files={"file": ("resume.pdf", f, "application/pdf")})
+        resp = requests.post(
+            "http://localhost:8001/upload-resume",
+            files={"file": ("resume.pdf", f, "application/pdf")},
+        )
     upload_time = time.time() - start_time
-    
+
     print("Status Code:", resp.status_code)
     data = resp.json()
     print("Response JSON:", data)
     candidate_id = data["candidate_id"]
 
-    print(f"\n=== 8. Verify API responsiveness ===")
+    print("\n=== 8. Verify API responsiveness ===")
     print(f"POST /upload-resume returned in {upload_time:.3f} seconds (before pipeline finishes).")
 
     print("\n=== 2. Candidate row immediately after upload ===")
@@ -37,15 +43,15 @@ def run():
 
     print("\n=== 4. State transition evidence ===")
     print("Waiting for pipeline to complete...")
-    
+
     seen_states = []
     max_wait = 60
-    for i in range(max_wait * 10):
+    for _i in range(max_wait * 10):
         db.refresh(candidate)
         if not seen_states or seen_states[-1] != candidate.pipeline_status:
             seen_states.append(candidate.pipeline_status)
             print(f"State changed to: {candidate.pipeline_status}")
-            
+
         if candidate.pipeline_status in ["COMPLETE", "FAILED"]:
             break
         time.sleep(0.1)
@@ -65,14 +71,17 @@ def run():
     print("Uploading a corrupt PDF to force a failure...")
     with open("corrupt.pdf", "wb") as f:
         f.write(b"%PDF-1.4\nCorrupt garbage data")
-        
+
     with open("corrupt.pdf", "rb") as f:
-        resp_fail = requests.post("http://localhost:8001/upload-resume", files={"file": ("corrupt.pdf", f, "application/pdf")})
-        
+        resp_fail = requests.post(
+            "http://localhost:8001/upload-resume",
+            files={"file": ("corrupt.pdf", f, "application/pdf")},
+        )
+
     if resp_fail.status_code == 200:
         fail_id = resp_fail.json()["candidate_id"]
         candidate_fail = db.query(Candidate).filter(Candidate.candidate_id == fail_id).first()
-        for i in range(max_wait * 10):
+        for _i in range(max_wait * 10):
             db.refresh(candidate_fail)
             if candidate_fail.pipeline_status in ["COMPLETE", "FAILED"]:
                 break
@@ -83,8 +92,11 @@ def run():
 
     print("\n=== 9. Acceptance criteria PASS/FAIL ===")
     print("PASS: The pipeline executes asynchronously via BackgroundTasks.")
-    print("PASS: Transitions (PENDING -> PARSING -> EMBEDDING -> SEARCHING -> REASONING -> COMPLETE) persist to the database.")
+    print(
+        "PASS: Transitions (PENDING -> PARSING -> EMBEDDING -> SEARCHING -> REASONING -> COMPLETE) persist to the database."
+    )
     print("PASS: API returns immediately.")
+
 
 if __name__ == "__main__":
     run()

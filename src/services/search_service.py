@@ -1,11 +1,11 @@
 import uuid
+
 from sqlalchemy.orm import Session
 
-from src.repositories import search_repository
-from src.models.match_result import MatchResult
-from src.models.job_posting import JobPosting
-from src.models.candidate import Candidate
 from src.core.metrics import metrics_store
+from src.models.candidate import Candidate
+from src.models.match_result import MatchResult
+from src.repositories import search_repository
 
 
 class SearchService:
@@ -32,10 +32,15 @@ class SearchService:
             if candidate.visa_required and not job.visa_sponsorship:
                 category = "REJECTED"
                 reason = "VISA_MISMATCH"
-            elif candidate.desired_salary is not None and (job.max_salary is None or job.max_salary < candidate.desired_salary):
+            elif candidate.desired_salary is not None and (
+                job.max_salary is None or job.max_salary < candidate.desired_salary
+            ):
                 category = "REJECTED"
                 reason = "SALARY_MISMATCH"
-            elif candidate.preferred_location is not None and job.location != candidate.preferred_location:
+            elif (
+                candidate.preferred_location is not None
+                and job.location != candidate.preferred_location
+            ):
                 category = "REJECTED"
                 reason = "LOCATION_MISMATCH"
             elif candidate.preferred_remote and not job.remote_ok:
@@ -54,16 +59,11 @@ class SearchService:
                 match_category=category,
                 reasoning=reason if reason else None,
                 skill_gaps=[],
-                standout_strengths=[]
+                standout_strengths=[],
             )
             self.db.add(match_result)
-            
-            results.append({
-                "job": job,
-                "score": score,
-                "category": category,
-                "reasoning": reason
-            })
-            
+
+            results.append({"job": job, "score": score, "category": category, "reasoning": reason})
+
         self.db.commit()
         return results

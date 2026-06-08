@@ -5,8 +5,8 @@ from src.schemas.candidate import CandidateProfile
 
 
 def create_candidate(
-    db: Session, 
-    resume_path: str, 
+    db: Session,
+    resume_path: str,
     original_filename: str,
     desired_salary: int | None = None,
     visa_required: bool | None = None,
@@ -28,11 +28,13 @@ def create_candidate(
     return candidate
 
 
-def update_candidate_profile(db: Session, candidate_id: str, profile: CandidateProfile) -> Candidate | None:
+def update_candidate_profile(
+    db: Session, candidate_id: str, profile: CandidateProfile
+) -> Candidate | None:
     candidate = db.query(Candidate).filter(Candidate.candidate_id == candidate_id).first()
     if not candidate:
         return None
-        
+
     if profile.name is not None:
         candidate.name = profile.name
     if profile.email is not None:
@@ -45,7 +47,7 @@ def update_candidate_profile(db: Session, candidate_id: str, profile: CandidateP
         candidate.education = profile.education
     if profile.location is not None:
         candidate.location = profile.location
-        
+
     db.commit()
     db.refresh(candidate)
     return candidate

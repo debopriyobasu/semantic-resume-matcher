@@ -1,49 +1,47 @@
 from threading import Lock
-from typing import Dict, List, Any
+from typing import Any
+
 
 class MetricsStore:
     """In-memory thread-safe metrics store."""
+
     def __init__(self) -> None:
         self._lock = Lock()
-        
+
         # Durations
-        self._pipeline_durations: List[float] = []
-        self._embedding_durations: List[float] = []
-        
+        self._pipeline_durations: list[float] = []
+        self._embedding_durations: list[float] = []
+
         # Distributions & Counts
-        self._match_confidence_distribution: Dict[str, int] = {
+        self._match_confidence_distribution: dict[str, int] = {
             "0.0-0.2": 0,
             "0.2-0.4": 0,
             "0.4-0.6": 0,
             "0.6-0.8": 0,
-            "0.8-1.0": 0
+            "0.8-1.0": 0,
         }
-        
-        self._pipeline_status_counts: Dict[str, int] = {
-            "COMPLETE": 0,
-            "FAILED": 0,
-            "PENDING": 0
-        }
-        
-        self._match_category_counts: Dict[str, int] = {
+
+        self._pipeline_status_counts: dict[str, int] = {"COMPLETE": 0, "FAILED": 0, "PENDING": 0}
+
+        self._match_category_counts: dict[str, int] = {
             "STRONG_MATCH": 0,
             "POTENTIAL_MATCH": 0,
             "WEAK_MATCH": 0,
-            "REJECTED": 0
+            "REJECTED": 0,
         }
 
     def record_pipeline_duration(self, duration_seconds: float) -> None:
         with self._lock:
             self._pipeline_durations.append(duration_seconds)
-            
+
     def record_embedding_duration(self, duration_seconds: float) -> None:
         with self._lock:
             self._embedding_durations.append(duration_seconds)
-            
+
     def record_match_confidence(self, confidence: float) -> None:
         if confidence is None:
             return
-            
+
         bucket = ""
         if 0.0 <= confidence <= 0.2:
             bucket = "0.0-0.2"
@@ -55,11 +53,11 @@ class MetricsStore:
             bucket = "0.6-0.8"
         elif 0.8 < confidence <= 1.0:
             bucket = "0.8-1.0"
-            
+
         if bucket:
             with self._lock:
                 self._match_confidence_distribution[bucket] += 1
-                
+
     def increment_pipeline_status(self, status: str) -> None:
         with self._lock:
             if status in self._pipeline_status_counts:
@@ -74,9 +72,10 @@ class MetricsStore:
             else:
                 self._match_category_counts[category] = 1
 
-    def get_metrics(self) -> Dict[str, Any]:
+    def get_metrics(self) -> dict[str, Any]:
         with self._lock:
-            def summarize_durations(durations: List[float]) -> Dict[str, float]:
+
+            def summarize_durations(durations: list[float]) -> dict[str, float]:
                 count = len(durations)
                 if count == 0:
                     return {"count": 0, "average_seconds": 0.0, "total_seconds": 0.0}
@@ -84,7 +83,7 @@ class MetricsStore:
                 return {
                     "count": count,
                     "average_seconds": round(total / count, 4),
-                    "total_seconds": round(total, 4)
+                    "total_seconds": round(total, 4),
                 }
 
             return {
@@ -92,8 +91,9 @@ class MetricsStore:
                 "embedding_duration_seconds": summarize_durations(self._embedding_durations),
                 "match_confidence_distribution": dict(self._match_confidence_distribution),
                 "pipeline_status_counts": dict(self._pipeline_status_counts),
-                "match_category_counts": dict(self._match_category_counts)
+                "match_category_counts": dict(self._match_category_counts),
             }
+
 
 # Global singleton metrics store
 metrics_store = MetricsStore()

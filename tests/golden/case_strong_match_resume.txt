@@ -1,0 +1,7 @@
+John Doe
+Python Backend Developer
+
+Skills: Python, FastAPI, PostgreSQL, Docker
+Experience: 5 years of experience building scalable backend APIs.
+Education: Bachelor of Science in Computer Science
+Location: New York, NY

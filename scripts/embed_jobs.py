@@ -14,7 +14,9 @@ from src.models.job_posting import JobPosting
 from src.repositories.job_embedding_repository import create_job_embedding
 from src.services.embedding_service import EmbeddingService
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)
 logger = logging.getLogger(__name__)
 
 
@@ -44,11 +46,7 @@ def main() -> None:
 
     try:
         # Get jobs without embeddings
-        stmt = (
-            select(JobPosting)
-            .outerjoin(JobEmbedding)
-            .where(JobEmbedding.embedding_id.is_(None))
-        )
+        stmt = select(JobPosting).outerjoin(JobEmbedding).where(JobEmbedding.embedding_id.is_(None))
         jobs_to_embed = db.scalars(stmt).all()
 
         logger.info("Found %d jobs without embeddings.", len(jobs_to_embed))
