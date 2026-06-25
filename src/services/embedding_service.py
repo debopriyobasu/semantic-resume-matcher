@@ -1,5 +1,6 @@
 import logging
 import time
+from typing import TYPE_CHECKING
 
 import httpx
 from google import genai
@@ -8,6 +9,10 @@ from google.genai.errors import APIError
 from src.core.config import get_settings
 from src.core.metrics import metrics_store
 from src.models.candidate import Candidate
+from src.models.job_posting import JobPosting
+
+if TYPE_CHECKING:
+    from sqlalchemy.orm import Session
 
 logger = logging.getLogger(__name__)
 
@@ -95,3 +100,66 @@ class EmbeddingService:
         """Generate an embedding for a candidate."""
         text = self.build_candidate_text(candidate)
         return self.generate_embedding(text)
+
+    def build_job_text(self, job: JobPosting) -> str:
+        """Build a text representation of the job posting for embedding."""
+        parts = [
+            f"Title: {job.title}",
+            f"Company: {job.company}",
+            f"Location: {job.location or 'Not specified'}",
+            f"Remote: {'Yes' if job.remote_ok else 'No'}",
+            f"Visa Sponsorship: {'Yes' if job.visa_sponsorship else 'No'}",
+        ]
+        if job.min_salary and job.max_salary:
+            parts.append(f"Salary Range: ${job.min_salary} - ${job.max_salary}")
+
+        if job.required_skills:
+            parts.append(f"Skills: {', '.join(job.required_skills)}")
+
+        parts.append(f"Description: {job.description}")
+
+        return "\n".join(parts)
+
+    def generate_job_embedding(self, db: "Session", job: JobPosting) -> list[float]:
+        """Generate and save embedding for a job."""
+        from src.repositories.job_embedding_repository import create_job_embedding
+        text = self.build_job_text(job)
+        embedding = self.generate_embedding(text)
+        create_job_embedding(db, job.job_id, embedding)
+        return embedding
+
+
+def process_job_embeddings() -> None:
+    """Background task to generate embeddings for any jobs that lack them."""
+    import logging
+
+    from sqlalchemy import select
+
+    from src.db.session import SessionLocal
+    from src.models.job_embedding import JobEmbedding
+    from src.models.job_posting import JobPosting
+
+    logger = logging.getLogger(__name__)
+    db = SessionLocal()
+    embedding_service = EmbeddingService()
+
+    try:
+        stmt = select(JobPosting).outerjoin(JobEmbedding).where(JobEmbedding.embedding_id.is_(None))
+        jobs_to_embed = db.scalars(stmt).all()
+
+        logger.info("Found %d jobs without embeddings to process in the background.", len(jobs_to_embed))
+
+        for job in jobs_to_embed:
+            logger.info("Embedding job: %s", job.job_id)
+            try:
+                # Double-check if embedding was generated in a concurrent run
+                existing_emb = db.scalar(select(JobEmbedding).where(JobEmbedding.job_id == job.job_id))
+                if not existing_emb:
+                    embedding_service.generate_job_embedding(db, job)
+                    logger.info("Successfully embedded job: %s", job.job_id)
+            except Exception as e:
+                logger.error("Failed to embed job %s: %s", job.job_id, e)
+                db.rollback()
+    finally:
+        db.close()
+

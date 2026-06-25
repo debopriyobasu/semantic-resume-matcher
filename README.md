@@ -184,6 +184,49 @@ Retrieves all matching job positions sorted by semantic similarity, augmented wi
 Exposes key platform indicators (useful for monitoring dashboard integration).
 * **Endpoint**: `GET /metrics`
 
+### 6. Upload Jobs Dataset
+Upload or replace the job listings database with a CSV file. Spawns an asynchronous background task to automatically generate vector embeddings for new or updated jobs.
+* **Endpoint**: `POST /jobs/upload`
+* **Query Params**:
+  * `mode`: `update` (default, adds new/updates existing job profiles) or `replace` (deletes all current jobs and loads fresh)
+* **Form-Data Params**:
+  * `file`: (Binary CSV File)
+* **Response**:
+  ```json
+  {
+    "status": "success",
+    "mode": "update",
+    "added_count": 2,
+    "updated_count": 1,
+    "deleted_count": 0,
+    "embedding_completed": false
+  }
+  ```
+
+### 7. Get Jobs Embedding Status
+Retrieve the status of the background embedding job generator.
+* **Endpoint**: `GET /jobs/embedding-status`
+* **Response**:
+  ```json
+  {
+    "embedding_completed": false,
+    "total_jobs": 15,
+    "jobs_without_embeddings": 3
+  }
+  ```
+
+### 8. Delete Jobs Dataset
+Delete all job listings and their associated vector embeddings from the database. Due to cascade deletes, matching candidates are also updated accordingly.
+* **Endpoint**: `DELETE /jobs`
+* **Response**:
+  ```json
+  {
+    "status": "success",
+    "message": "Dataset deleted successfully.",
+    "deleted_count": 15
+  }
+  ```
+
 ---
 
 ## Local Development & Installation
@@ -264,6 +307,30 @@ The application expects job listings to be seeded from a CSV file located at `se
 * **`description`**: Full text description of the job (string)
 
 ### Resetting the Dataset & Starting Afresh
+
+You can manage the jobs dataset either through the **REST API endpoints** (recommended) or using **direct database/CLI commands**.
+
+#### Option A: Via the REST API (Recommended)
+
+1. **Delete All Jobs**:
+   Send a `DELETE` request to `/jobs`:
+   ```bash
+   curl -X DELETE http://localhost:8000/jobs
+   ```
+2. **Upload & Re-Embed a New CSV**:
+   Send a `POST` request to `/jobs/upload` with your CSV file. Use `mode=replace` to overwrite the current dataset or `mode=update` to merge new/modified postings:
+   ```bash
+   curl -X POST "http://localhost:8000/jobs/upload?mode=replace" \
+     -F "file=@seed_data/jobs.csv"
+   ```
+3. **Monitor Embedding Progress**:
+   Check the embedding status to ensure background vector generation has completed:
+   ```bash
+   curl http://localhost:8000/jobs/embedding-status
+   ```
+
+#### Option B: Via Database & CLI Commands
+
 Due to PostgreSQL database cascade delete rules, deleting a job posting from `job_postings` will automatically clean up all associated embeddings in `job_embeddings` and matches in `match_results`.
 
 1. **Delete Existing Jobs**

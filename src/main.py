@@ -3,6 +3,7 @@ import uuid
 from fastapi import FastAPI, Request
 
 from src.api.health import router as health_router
+from src.api.jobs import router as jobs_router
 from src.api.metrics import router as metrics_router
 from src.api.results import router as results_router
 from src.api.upload import router as upload_router
@@ -29,6 +30,7 @@ def create_app() -> FastAPI:
     app.include_router(upload_router)
     app.include_router(results_router)
     app.include_router(metrics_router)
+    app.include_router(jobs_router)
     return app
 
 

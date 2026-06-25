@@ -1,4 +1,4 @@
-from sqlalchemy import func, select
+from sqlalchemy import delete, func, select
 from sqlalchemy.orm import Session
 
 from src.models.job_posting import JobPosting
@@ -23,3 +23,10 @@ def bulk_create_jobs(db: Session, jobs_data: list[dict]) -> list[JobPosting]:
 
 def count_jobs(db: Session) -> int:
     return db.scalar(select(func.count()).select_from(JobPosting)) or 0
+
+
+def delete_all_jobs(db: Session) -> int:
+    result = db.execute(delete(JobPosting))
+    db.commit()
+    return result.rowcount
+
