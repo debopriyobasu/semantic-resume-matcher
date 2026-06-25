@@ -212,7 +212,9 @@ def test_end_to_end_pipeline_flow(
     # 5. Verify candidate status is now COMPLETE via API
     status_response = client.get(f"/candidate/{candidate_id}")
     assert status_response.status_code == 200
-    assert status_response.json()["pipeline_status"] == "COMPLETE"
+    status_data = status_response.json()
+    assert status_data["pipeline_status"] == "COMPLETE"
+    assert status_data["status"] == "COMPLETE"
 
     # 6. Retrieve match results via API
     matches_response = client.get(f"/candidate/{candidate_id}/matches")

@@ -23,7 +23,9 @@ def get_candidate_status(candidate_id: uuid.UUID, db: Session = Depends(get_db))
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Candidate not found")
 
     return CandidateStatusResponse(
-        candidate_id=candidate.candidate_id, pipeline_status=candidate.pipeline_status
+        candidate_id=candidate.candidate_id,
+        status=candidate.pipeline_status,
+        pipeline_status=candidate.pipeline_status,
     )
 
 

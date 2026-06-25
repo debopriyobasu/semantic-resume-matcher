@@ -37,6 +37,7 @@ def test_get_candidate_status_found() -> None:
     data = response.json()
     assert data["candidate_id"] == str(candidate_id)
     assert data["pipeline_status"] == "COMPLETE"
+    assert data["status"] == "COMPLETE"
 
 
 def test_get_candidate_status_not_found() -> None:

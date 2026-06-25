@@ -67,6 +67,10 @@ class PipelineService:
 
         except Exception as e:
             logger.error(f"Pipeline failed for candidate {candidate_id}: {e}", exc_info=True)
+            try:
+                self.db.rollback()
+            except Exception as rollback_err:
+                logger.error(f"Failed to rollback database transaction: {rollback_err}")
             self._update_status(candidate, "FAILED")
             metrics_store.increment_pipeline_status("FAILED")
         finally:

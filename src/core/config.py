@@ -13,9 +13,17 @@ class Settings(BaseSettings):
     google_api_key: str = Field(default="", alias="GOOGLE_API_KEY")
     prompt_dir: str = Field(default="prompts", alias="PROMPT_DIR")
 
+    use_ollama: bool = Field(default=True, alias="USE_OLLAMA")
+    ollama_base_url: str = Field(
+        default="http://host.docker.internal:11434", alias="OLLAMA_BASE_URL"
+    )
+    ollama_llm_model: str = Field(default="llama3.2", alias="OLLAMA_LLM_MODEL")
+    ollama_embed_model: str = Field(default="nomic-embed-text", alias="OLLAMA_EMBED_MODEL")
+
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
 
 @lru_cache
 def get_settings() -> Settings:
     return Settings()
+

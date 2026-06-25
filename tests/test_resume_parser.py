@@ -86,7 +86,7 @@ def test_extract_profile_validation_failure(parser):
         mock_response = MagicMock()
         # Missing skills which is a required list field, though it has default_factory it might just use it.
         # Let's send an invalid type for experience_years
-        mock_response.text = '{"name": "John", "experience_years": "five years"}'
+        mock_response.text = '{"name": {"first": "John"}, "experience_years": 5}'
         mock_client.models.generate_content.return_value = mock_response
 
         with pytest.raises(ResumeParseError, match="Failed to validate extracted profile"):

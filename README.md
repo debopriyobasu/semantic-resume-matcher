@@ -1,8 +1,10 @@
-# Semantic Resume Matcher
+# Semantic Resume Matcher (Offline-First)
 
-AI-powered resume-to-job matching system built with FastAPI, PostgreSQL, pgvector, and Gemini.
+AI-powered resume-to-job matching system built with FastAPI, PostgreSQL, pgvector, and Ollama.
 
-Upload a PDF resume, extract structured candidate information using Gemini, perform semantic job matching using vector search, apply deterministic business constraints, and generate explainable job recommendations.
+This application is designed to be **entirely local and offline-first**, running all language models and embedding generation locally on your machine without relying on external cloud APIs.
+
+Upload a PDF resume, extract structured candidate information using local Ollama models, perform semantic job matching using vector search, apply deterministic business constraints, and generate explainable job recommendations.
 
 ---
 
@@ -12,12 +14,12 @@ Upload a PDF resume, extract structured candidate information using Gemini, perf
 
 * PDF resume upload
 * Resume text extraction
-* Structured candidate profile generation using Gemini
+* Structured candidate profile generation using Ollama (`gemma3:1b` / `llama3.2`)
 * Validation of extracted candidate data
 
 ### Semantic Search
 
-* Candidate embeddings using `text-embedding-004`
+* Candidate embeddings using local Ollama (`nomic-embed-text`)
 * Vector similarity search with PostgreSQL + pgvector
 * Top-N job retrieval based on semantic relevance
 
@@ -28,7 +30,7 @@ Upload a PDF resume, extract structured candidate information using Gemini, perf
   * Visa requirements
   * Location preferences
   * Salary expectations
-* Gemini-powered fit analysis
+* Ollama-powered local fit analysis
 * Skill gap detection
 * Match confidence scoring
 
@@ -54,10 +56,10 @@ Resume Upload
 PDF Extraction
       │
       ▼
-Gemini Resume Structuring
+Ollama Resume Structuring
       │
       ▼
-Candidate Embedding
+Ollama Candidate Embedding
       │
       ▼
 pgvector Similarity Search
@@ -66,7 +68,7 @@ pgvector Similarity Search
 Constraint Filtering
       │
       ▼
-Gemini Match Evaluation
+Ollama Match Evaluation
       │
       ▼
 Ranked Match Results
@@ -83,8 +85,8 @@ Ranked Match Results
 | Vector Search    | pgvector           |
 | ORM              | SQLAlchemy 2.0     |
 | Migrations       | Alembic            |
-| LLM              | Gemini 2.0 Flash   |
-| Embeddings       | text-embedding-004 |
+| LLM              | Ollama (gemma3:1b / llama3.2) |
+| Embeddings       | Ollama (nomic-embed-text) |
 | PDF Parsing      | PyPDF              |
 | Testing          | pytest             |
 | Containerization | Docker Compose     |
@@ -268,7 +270,13 @@ curl -X GET "http://localhost:8000/metrics"
 
 * Docker
 * Docker Compose
-* Gemini API Key
+* [Ollama](https://ollama.com/) running on your host machine
+
+Ensure you have pulled the required local models before starting the application:
+```bash
+ollama pull gemma3:1b            # Recommended local LLM (or llama3.2)
+ollama pull nomic-embed-text    # Required embedding model
+```
 
 ---
 
@@ -283,8 +291,11 @@ cp .env.example .env
 Populate:
 
 ```env
-DATABASE_URL=postgresql://...
-GOOGLE_API_KEY=...
+DATABASE_URL=postgresql+psycopg://resume_matcher:resume_matcher@postgres:5432/resume_matcher
+USE_OLLAMA=true
+OLLAMA_BASE_URL=http://host.docker.internal:11434
+OLLAMA_LLM_MODEL=gemma3:1b
+OLLAMA_EMBED_MODEL=nomic-embed-text
 ```
 
 ---
@@ -372,21 +383,21 @@ while preserving clear module boundaries.
 
 ---
 
-### Why Gemini Only For Extraction and Evaluation?
+### Why Local Ollama Only For Extraction and Evaluation?
 
-Gemini is intentionally limited to:
+Ollama is intentionally limited to:
 
 * Resume extraction
 * Match evaluation
 
-Deterministic code handles:
+Deterministic Python code handles:
 
 * Validation
 * Filtering
 * Similarity search
 * Business rules
 
-This improves reliability and reduces cost.
+This improves reliability, ensures 100% data privacy, and makes the system fully self-hosted.
 
 ---
 

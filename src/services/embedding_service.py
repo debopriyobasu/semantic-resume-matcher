@@ -1,5 +1,6 @@
 import logging
 import time
+import httpx
 
 from google import genai
 from google.genai.errors import APIError
@@ -23,23 +24,48 @@ class EmbeddingService:
         self.client = genai.Client(api_key=self.settings.google_api_key)
 
     def generate_embedding(self, text: str) -> list[float]:
-        """Generate an embedding for the given text using gemini-embedding-2 model truncated to 768 dimensions."""
+        """Generate an embedding for the given text using Gemini or Ollama, normalized to exactly 768 dimensions."""
         start_time = time.perf_counter()
         try:
-            from google.genai import types
+            if self.settings.use_ollama:
+                try:
+                    response = httpx.post(
+                        f"{self.settings.ollama_base_url}/api/embeddings",
+                        json={
+                            "model": self.settings.ollama_embed_model,
+                            "prompt": text,
+                        },
+                        timeout=30.0,
+                    )
+                    response.raise_for_status()
+                    response_json = response.json()
+                    embedding = response_json["embedding"]
+                    # Validate/safe-pad/truncate to exactly 768 dimensions for pgvector compatibility
+                    if len(embedding) > 768:
+                        embedding = embedding[:768]
+                    elif len(embedding) < 768:
+                        embedding = embedding + [0.0] * (768 - len(embedding))
+                    duration = time.perf_counter() - start_time
+                    metrics_store.record_embedding_duration(duration)
+                    return embedding
+                except Exception as e:
+                    raise EmbeddingError(f"Ollama embedding failure: {e}") from e
+            else:
+                from google.genai import types
 
-            response = self.client.models.embed_content(
-                model="gemini-embedding-2",
-                contents=text,
-                config=types.EmbedContentConfig(output_dimensionality=768),
-            )
-            # The genai SDK returns an EmbedContentResponse which has an embeddings list
-            duration = time.perf_counter() - start_time
-            metrics_store.record_embedding_duration(duration)
-            return response.embeddings[0].values
+                response = self.client.models.embed_content(
+                    model="gemini-embedding-2",
+                    contents=text,
+                    config=types.EmbedContentConfig(output_dimensionality=768),
+                )
+                duration = time.perf_counter() - start_time
+                metrics_store.record_embedding_duration(duration)
+                return response.embeddings[0].values
         except APIError as e:
             logger.error("Transient error generating embedding: %s", e)
             raise EmbeddingError(f"Transient error generating embedding: {e}") from e
+        except EmbeddingError:
+            raise
         except Exception as e:
             logger.error("Failed to generate embedding: %s", e)
             raise EmbeddingError(f"Failed to generate embedding: {e}") from e

@@ -6,6 +6,7 @@ from pydantic import BaseModel, ConfigDict
 class CandidateStatusResponse(BaseModel):
     candidate_id: uuid.UUID
     pipeline_status: str
+    status: str
 
 
 class MatchJobResponse(BaseModel):
