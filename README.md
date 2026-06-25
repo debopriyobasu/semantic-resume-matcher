@@ -221,7 +221,7 @@ Returns:
 
 ## Demo
 
-Here is a quick walkthrough of the core features via `curl`. Ensure the application and database are running and bootstrapped first (`docker compose up` and `make bootstrap`).
+Here is a quick walkthrough of the core features via `curl`. Ensure the application and database are running and bootstrapped first (`docker compose up` and the bootstrap script).
 
 ### 1. Upload Resume
 
@@ -310,15 +310,62 @@ docker compose up
 
 ### Bootstrap Data
 
-```bash
-make bootstrap
-```
+To run migrations, import job postings, and generate their embeddings in a single cross-platform command:
 
-This command:
+* **If running locally:**
+  ```bash
+  python scripts/bootstrap.py
+  ```
 
-* Runs migrations
-* Imports job dataset
-* Generates job embeddings
+* **If running through Docker:**
+  ```bash
+  docker compose exec api python scripts/bootstrap.py
+  ```
+
+This script:
+
+* Runs database migrations via Alembic
+* Imports the job dataset from `seed_data/jobs.csv`
+* Generates job embeddings using Ollama (`nomic-embed-text`)
+
+---
+
+### Managing the Job Dataset
+
+#### Job Dataset Format
+The application expects job listings to be seeded from a CSV file located at `seed_data/jobs.csv`. The CSV requires the following columns:
+* **`title`**: Job title (string, e.g., `Associate Backend Engineer`)
+* **`company`**: Company name (string, e.g., `Northstar Labs`)
+* **`location`**: Job location (string, optional/nullable, e.g., `San Francisco, CA` or empty)
+* **`remote_ok`**: Remote work status (boolean, e.g., `true`, `false`, `1`, `0`, `yes`, `no`)
+* **`visa_sponsorship`**: Visa sponsorship status (boolean, e.g., `true`, `false`, `1`, `0`, `yes`, `no`)
+* **`min_salary`**: Minimum salary (integer, optional/nullable)
+* **`max_salary`**: Maximum salary (integer, optional/nullable)
+* **`required_skills`**: Required skills separated by semicolons (string, e.g., `Python;FastAPI;SQLAlchemy;PostgreSQL`)
+* **`description`**: Full text description of the job (string)
+
+#### Resetting the Dataset & Starting Afresh
+Due to PostgreSQL database cascade delete rules, deleting a job posting from `job_postings` will automatically clean up all associated embeddings in `job_embeddings` and matches in `match_results`.
+
+1. **Delete Existing Jobs**
+   * If running through Docker:
+     ```bash
+     docker compose exec postgres psql -U resume_matcher -d resume_matcher -c "TRUNCATE TABLE job_postings CASCADE;"
+     ```
+   * If running Postgres locally:
+     ```bash
+     psql "postgresql://resume_matcher:resume_matcher@localhost:5432/resume_matcher" -c "TRUNCATE TABLE job_postings CASCADE;"
+     ```
+
+2. **Import and Re-Embed New Data**
+   After replacing or editing your `seed_data/jobs.csv`:
+   ```bash
+   # Import the jobs
+   python scripts/import_jobs.py
+   
+   # Re-generate embeddings for the new jobs
+   python scripts/embed_jobs.py
+   ```
 
 ---
 
@@ -352,65 +399,6 @@ pytest
 
 ---
 
-## Design Decisions
-
-### Why PostgreSQL + pgvector Instead of Pinecone?
-
-For a portfolio project:
-
-* Simpler local setup
-* No external vector database account
-* Easier GitHub reproducibility
-* Lower operational complexity
-
----
-
-### Why Modular Monolith Instead of Microservices?
-
-The project focuses on:
-
-* AI workflows
-* Vector search
-* Backend engineering
-
-A modular monolith provides:
-
-* Faster development
-* Easier debugging
-* Lower infrastructure overhead
-
-while preserving clear module boundaries.
-
----
-
-### Why Local Ollama Only For Extraction and Evaluation?
-
-Ollama is intentionally limited to:
-
-* Resume extraction
-* Match evaluation
-
-Deterministic Python code handles:
-
-* Validation
-* Filtering
-* Similarity search
-* Business rules
-
-This improves reliability, ensures 100% data privacy, and makes the system fully self-hosted.
-
----
-
-## Future Enhancements
-
-* Match history dashboard
-* Candidate feedback loop
-* Multi-language resume support
-* Job scraping integrations
-* Scheduled re-matching
-* Explainable match highlighting
-
----
 
 ## License
 
