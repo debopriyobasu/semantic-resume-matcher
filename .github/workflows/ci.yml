@@ -55,6 +55,5 @@ jobs:
       - name: Run Pytest
         env:
           DATABASE_URL: postgresql+psycopg://resume_matcher:resume_matcher@localhost:5432/resume_matcher
-          GOOGLE_API_KEY: fake-key-for-testing
         run: |
           pytest

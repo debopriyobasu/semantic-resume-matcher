@@ -49,59 +49,10 @@ Modern candidate screening pipelines face major operational hurdles:
 
 Our multi-stage pipeline combines the raw speed of database-level vector indexing with the qualitative reasoning of local LLMs. The local system boundary isolates all PII and processing, executing entirely on your local machine:
 
-```mermaid
-flowchart TB
-    %% Styling definitions
-    classDef client fill:#f9f0ff,stroke:#d3adf7,stroke-width:2px,color:#000;
-    classDef app fill:#e6f7ff,stroke:#91d5ff,stroke-width:2px,color:#000;
-    classDef db fill:#f6ffed,stroke:#b7eb8f,stroke-width:2px,color:#000;
-    classDef ai fill:#fff2e8,stroke:#ffbb96,stroke-width:2px,color:#000;
+![System Architecture](docs/architecture.svg)
 
-    subgraph ClientSpace ["User / Recruiter Client"]
-        A[Candidate PDF Resume]
-        H[Explainable Match Results]
-    end
-
-    subgraph AppLayer ["FastAPI Application (Local Gateway)"]
-        direction TB
-        B[PDF Text Extractor<br/>pyPDF]
-        C[Profile Structurer & Validator<br/>Pydantic Models]
-        D[Matchmaker & Filtering Engine]
-    end
-
-    subgraph DatabaseLayer ["Local Storage & Indexing (PostgreSQL)"]
-        direction LR
-        E1[(Relational Data<br/>Candidates, Jobs)]
-        E2[(Vector Store<br/>pgvector Embeddings)]
-    end
-
-    subgraph AILayer ["Local LLM Inference Engine (Ollama)"]
-        direction TB
-        F1[nomic-embed-text<br/>Embeddings Model]
-        F2[gemma3 / llama3.2<br/>Inference Model]
-    end
-
-    %% Data Flow Connections
-    A -->|Upload Resume| B
-    B -->|Send Raw Text| C
-    C <-->|1. Structured Extraction| F2
-    C -->|2. Save Profile| E1
-    C -->|3. Request Embedding| F1
-    F1 -->|4. Return Vector| C
-    C -->|5. Save Embedding| E2
-
-    H <--- D
-    D <-->|6. Query Jobs & Candidates| E1
-    D <-->|7. Cosine Similarity Search| E2
-    D -->|8. Apply Hard Filters<br/>Visa, Salary, Location| D
-    D <-->|9. Run Fit Analysis<br/>Strengths, Gaps| F2
-    D -->|10. Store Results| E1
-    
-    class A,H client;
-    class B,C,D app;
-    class E1,E2 db;
-    class F1,F2 ai;
-```
+> [!TIP]
+> **Interactive Diagram**: The system architecture diagram is available as an offline-editable Draw.io document. You can open and edit [docs/architecture.drawio](docs/architecture.drawio) using the desktop app, [draw.io web app](https://app.diagrams.net/), or the VS Code Draw.io extension.
 
 
 ---

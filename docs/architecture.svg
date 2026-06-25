@@ -1,0 +1,145 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 850 600" width="100%" height="100%">
+    <defs>
+        <!-- Shadow filter -->
+        <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+            <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.08"/>
+        </filter>
+        <!-- Gradients -->
+        <linearGradient id="gradient-client" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#FAF5FF"/>
+            <stop offset="100%" stop-color="#F3E8FF"/>
+        </linearGradient>
+        <linearGradient id="gradient-app" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#F0F9FF"/>
+            <stop offset="100%" stop-color="#E0F2FE"/>
+        </linearGradient>
+        <linearGradient id="gradient-db" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#F0FDF4"/>
+            <stop offset="100%" stop-color="#DCFCE7"/>
+        </linearGradient>
+        <linearGradient id="gradient-ai" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#FFF7ED"/>
+            <stop offset="100%" stop-color="#FFEDD5"/>
+        </linearGradient>
+        <!-- Arrowhead markers -->
+        <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#4B5563"/>
+        </marker>
+        <marker id="arrow-gray" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#9CA3AF"/>
+        </marker>
+    </defs>
+
+    <!-- Background -->
+    <rect width="850" height="600" fill="#FCFCFD" rx="8"/>
+
+    <!-- ==================== CONTAINER 1: CLIENT ==================== -->
+    <rect x="40" y="40" width="220" height="520" rx="12" fill="url(#gradient-client)" stroke="#D8B4FE" stroke-width="2" filter="url(#shadow)"/>
+    <text x="150" y="70" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="#581C87">Client / Recruiter UI</text>
+
+    <!-- Node A: Candidate PDF Resume -->
+    <rect x="60" y="100" width="180" height="60" rx="8" fill="#FFFFFF" stroke="#C084FC" stroke-width="1.5" filter="url(#shadow)"/>
+    <text x="150" y="135" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="bold" fill="#581C87">Candidate PDF Resume</text>
+
+    <!-- Node H: Explainable Match Results -->
+    <rect x="60" y="440" width="180" height="60" rx="8" fill="#FFFFFF" stroke="#C084FC" stroke-width="1.5" filter="url(#shadow)"/>
+    <text x="150" y="475" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="bold" fill="#581C87">Explainable Match Results</text>
+
+
+    <!-- ==================== CONTAINER 2: FASTAPI APP ==================== -->
+    <rect x="290" y="40" width="230" height="520" rx="12" fill="url(#gradient-app)" stroke="#7DD3FC" stroke-width="2" filter="url(#shadow)"/>
+    <text x="405" y="70" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="#0369A1">FastAPI Backend (Local)</text>
+
+    <!-- Node B: PDF Text Extractor -->
+    <rect x="315" y="100" width="180" height="60" rx="8" fill="#FFFFFF" stroke="#38BDF8" stroke-width="1.5" filter="url(#shadow)"/>
+    <text x="405" y="130" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="bold" fill="#0369A1">PDF Text Extractor</text>
+    <text x="405" y="146" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#0369A1">(pyPDF)</text>
+
+    <!-- Node C: Profile Structurer -->
+    <rect x="315" y="240" width="180" height="60" rx="8" fill="#FFFFFF" stroke="#38BDF8" stroke-width="1.5" filter="url(#shadow)"/>
+    <text x="405" y="270" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="bold" fill="#0369A1">Profile Structurer</text>
+    <text x="405" y="286" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#0369A1">&amp; Validator (Pydantic)</text>
+
+    <!-- Node D: Matchmaker -->
+    <rect x="315" y="440" width="180" height="60" rx="8" fill="#FFFFFF" stroke="#38BDF8" stroke-width="1.5" filter="url(#shadow)"/>
+    <text x="405" y="470" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="bold" fill="#0369A1">Matchmaker &amp;</text>
+    <text x="405" y="486" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#0369A1">Filtering Engine</text>
+
+
+    <!-- ==================== CONTAINER 3: POSTGRESQL DB ==================== -->
+    <rect x="550" y="40" width="260" height="240" rx="12" fill="url(#gradient-db)" stroke="#86EFAC" stroke-width="2" filter="url(#shadow)"/>
+    <text x="680" y="70" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="#15803D">PostgreSQL DB (pgvector)</text>
+
+    <!-- Node E1: Relational Data -->
+    <path d="M585,115 A95,15 0 0,0 775,115 L775,145 A95,15 0 0,1 585,145 Z" fill="#FFFFFF" stroke="#4ADE80" stroke-width="1.5" filter="url(#shadow)"/>
+    <ellipse cx="680" cy="115" rx="95" ry="15" fill="#FFFFFF" stroke="#4ADE80" stroke-width="1.5"/>
+    <text x="680" y="132" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="bold" fill="#15803D">Relational Data</text>
+    <text x="680" y="146" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#15803D">(Candidates, Jobs)</text>
+
+    <!-- Node E2: Vector Store -->
+    <path d="M585,205 A95,15 0 0,0 775,205 L775,235 A95,15 0 0,1 585,235 Z" fill="#FFFFFF" stroke="#4ADE80" stroke-width="1.5" filter="url(#shadow)"/>
+    <ellipse cx="680" cy="205" rx="95" ry="15" fill="#FFFFFF" stroke="#4ADE80" stroke-width="1.5"/>
+    <text x="680" y="222" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="bold" fill="#15803D">Vector Store</text>
+    <text x="680" y="236" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#15803D">(pgvector Embeddings)</text>
+
+
+    <!-- ==================== CONTAINER 4: OLLAMA LLM ==================== -->
+    <rect x="550" y="300" width="260" height="260" rx="12" fill="url(#gradient-ai)" stroke="#FDBA74" stroke-width="2" filter="url(#shadow)"/>
+    <text x="680" y="330" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="#C2410C">Ollama LLM Engine (Local)</text>
+
+    <!-- Node F1: nomic-embed-text -->
+    <rect x="590" y="360" width="180" height="60" rx="8" fill="#FFFFFF" stroke="#FB923C" stroke-width="1.5" filter="url(#shadow)"/>
+    <text x="680" y="390" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="bold" fill="#C2410C">nomic-embed-text</text>
+    <text x="680" y="406" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#C2410C">(Embeddings Model)</text>
+
+    <!-- Node F2: gemma3 / llama3.2 -->
+    <rect x="590" y="460" width="180" height="60" rx="8" fill="#FFFFFF" stroke="#FB923C" stroke-width="1.5" filter="url(#shadow)"/>
+    <text x="680" y="490" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="bold" fill="#C2410C">gemma3 / llama3.2</text>
+    <text x="680" y="506" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#C2410C">(Inference Model)</text>
+
+
+    <!-- ==================== FLOWS / CONNECTIONS ==================== -->
+    <!-- A -> B: Upload Resume -->
+    <path d="M 240,130 L 307,130" fill="none" stroke="#4B5563" stroke-width="1.5" marker-end="url(#arrow)"/>
+    <text x="272" y="122" font-family="system-ui, -apple-system, sans-serif" font-size="9" font-weight="bold" fill="#374151" text-anchor="middle">Upload</text>
+
+    <!-- B -> C: Raw Text -->
+    <path d="M 405,160 L 405,232" fill="none" stroke="#4B5563" stroke-width="1.5" marker-end="url(#arrow)"/>
+    <text x="410" y="202" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#4B5563">Raw Text</text>
+
+    <!-- C -> F2: 1. Structured Parse -->
+    <path d="M 495,280 L 530,280 L 530,490 L 582,490" fill="none" stroke="#4B5563" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#arrow)"/>
+    <text x="535" y="482" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#374151">1. Parse</text>
+
+    <!-- C -> E1: 2. Save Profile -->
+    <path d="M 495,250 L 540,250 L 540,135 L 577,135" fill="none" stroke="#4B5563" stroke-width="1.5" marker-end="url(#arrow)"/>
+    <text x="545" y="128" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#374151">2. Save</text>
+
+    <!-- C -> F1: 3. Request Vector & 4. Return Vector -->
+    <path d="M 495,270 L 550,270 L 550,390 L 582,390" fill="none" stroke="#4B5563" stroke-width="1.5" marker-end="url(#arrow)"/>
+    <text x="555" y="382" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#374151">3. Embed</text>
+
+    <!-- C -> E2: 5. Save Embedding -->
+    <path d="M 495,260 L 545,260 L 545,220 L 577,220" fill="none" stroke="#4B5563" stroke-width="1.5" marker-end="url(#arrow)"/>
+    <text x="548" y="213" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#374151">5. Save Vector</text>
+
+    <!-- D -> H: Explainable Matches -->
+    <path d="M 315,470 L 248,470" fill="none" stroke="#4B5563" stroke-width="1.5" marker-end="url(#arrow)"/>
+    <text x="281" y="462" font-family="system-ui, -apple-system, sans-serif" font-size="9" font-weight="bold" fill="#374151" text-anchor="middle">Matches</text>
+
+    <!-- D -> E1: 6. Fetch Profiles/Jobs -->
+    <path d="M 495,450 L 525,450 L 525,145 L 577,145" fill="none" stroke="#4B5563" stroke-width="1.5" marker-end="url(#arrow)"/>
+    <text x="500" y="442" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#374151">6. Query</text>
+
+    <!-- D <-> E2: 7. Cosine Similarity -->
+    <path d="M 495,460 L 535,460 L 535,230 L 577,230" fill="none" stroke="#4B5563" stroke-width="1.5" marker-end="url(#arrow)"/>
+    <text x="540" y="247" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#374151">7. Similarity</text>
+
+    <!-- D <-> F2: 9. Run Fit Analysis -->
+    <path d="M 495,480 L 582,480" fill="none" stroke="#4B5563" stroke-width="1.5" marker-end="url(#arrow)"/>
+    <text x="538" y="474" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#374151" text-anchor="middle">9. Fit Reasoning</text>
+
+    <!-- D -> E1: 10. Store Results -->
+    <path d="M 495,440 L 520,440 L 520,125 L 577,125" fill="none" stroke="#4B5563" stroke-width="1.5" marker-end="url(#arrow)"/>
+    <text x="500" y="432" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#374151">10. Store</text>
+</svg>
