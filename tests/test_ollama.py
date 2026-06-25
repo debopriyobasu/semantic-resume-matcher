@@ -15,6 +15,7 @@ from src.services.resume_parser import ResumeParserService
 @pytest.fixture
 def ollama_settings():
     import os
+
     os.environ["USE_OLLAMA"] = "true"
     settings = Settings(
         use_ollama=True,
@@ -28,7 +29,9 @@ def ollama_settings():
 
 @patch("src.services.resume_parser.get_settings")
 @patch("httpx.post")
-def test_ollama_parser_success(mock_post: MagicMock, mock_get_settings: MagicMock, ollama_settings: Settings) -> None:
+def test_ollama_parser_success(
+    mock_post: MagicMock, mock_get_settings: MagicMock, ollama_settings: Settings
+) -> None:
     mock_get_settings.return_value = ollama_settings
 
     # Mock Ollama HTTP response
@@ -36,14 +39,16 @@ def test_ollama_parser_success(mock_post: MagicMock, mock_get_settings: MagicMoc
     mock_response.status_code = 200
     mock_response.json.return_value = {
         "message": {
-            "content": json.dumps({
-                "name": "Jane Doe",
-                "email": "jane@example.com",
-                "skills": ["Python", "Docker"],
-                "experience_years": 3,
-                "education": "MS",
-                "location": "Boston",
-            })
+            "content": json.dumps(
+                {
+                    "name": "Jane Doe",
+                    "email": "jane@example.com",
+                    "skills": ["Python", "Docker"],
+                    "experience_years": 3,
+                    "education": "MS",
+                    "location": "Boston",
+                }
+            )
         }
     }
     mock_post.return_value = mock_response
@@ -60,7 +65,9 @@ def test_ollama_parser_success(mock_post: MagicMock, mock_get_settings: MagicMoc
 
 @patch("src.services.resume_parser.get_settings")
 @patch("httpx.post")
-def test_ollama_parser_failure(mock_post: MagicMock, mock_get_settings: MagicMock, ollama_settings: Settings) -> None:
+def test_ollama_parser_failure(
+    mock_post: MagicMock, mock_get_settings: MagicMock, ollama_settings: Settings
+) -> None:
     mock_get_settings.return_value = ollama_settings
 
     # Mock Ollama failing response
@@ -116,7 +123,9 @@ def test_ollama_embedding_success_dimensions_truncating(
 
 @patch("src.services.embedding_service.get_settings")
 @patch("httpx.post")
-def test_ollama_embedding_failure(mock_post: MagicMock, mock_get_settings: MagicMock, ollama_settings: Settings) -> None:
+def test_ollama_embedding_failure(
+    mock_post: MagicMock, mock_get_settings: MagicMock, ollama_settings: Settings
+) -> None:
     mock_get_settings.return_value = ollama_settings
     mock_post.side_effect = Exception("Ollama embedding endpoint error")
 
@@ -127,20 +136,24 @@ def test_ollama_embedding_failure(mock_post: MagicMock, mock_get_settings: Magic
 
 @patch("src.services.matchmaker_service.get_settings")
 @patch("httpx.post")
-def test_ollama_matchmaker_success(mock_post: MagicMock, mock_get_settings: MagicMock, ollama_settings: Settings) -> None:
+def test_ollama_matchmaker_success(
+    mock_post: MagicMock, mock_get_settings: MagicMock, ollama_settings: Settings
+) -> None:
     mock_get_settings.return_value = ollama_settings
 
     mock_response = MagicMock()
     mock_response.status_code = 200
     mock_response.json.return_value = {
         "message": {
-            "content": json.dumps({
-                "confidence": 0.85,
-                "match_category": "STRONG_MATCH",
-                "reasoning": "Fits the criteria.",
-                "skill_gaps": [],
-                "standout_strengths": ["Python"],
-            })
+            "content": json.dumps(
+                {
+                    "confidence": 0.85,
+                    "match_category": "STRONG_MATCH",
+                    "reasoning": "Fits the criteria.",
+                    "skill_gaps": [],
+                    "standout_strengths": ["Python"],
+                }
+            )
         }
     }
     mock_post.return_value = mock_response

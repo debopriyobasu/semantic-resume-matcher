@@ -12,8 +12,7 @@ from alembic import command
 from alembic.config import Config
 
 logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger("bootstrap")
 
@@ -33,11 +32,13 @@ def main() -> None:
         # 2. Import jobs
         logger.info("Importing job postings from CSV...")
         from scripts.import_jobs import main as import_jobs_main
+
         import_jobs_main()
 
         # 3. Embed jobs
         logger.info("Generating embeddings for job postings...")
         from scripts.embed_jobs import main as embed_jobs_main
+
         embed_jobs_main()
 
         logger.info("Bootstrap complete!")

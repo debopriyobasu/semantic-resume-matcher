@@ -122,6 +122,7 @@ class ResumeParserService:
                 except (ValueError, TypeError):
                     if isinstance(exp, str):
                         import re
+
                         digits = re.findall(r"\d+", exp)
                         if digits:
                             profile_data["experience_years"] = int(digits[0])
@@ -161,7 +162,10 @@ class ResumeParserService:
             if skills is not None and not isinstance(skills, list):
                 if isinstance(skills, str):
                     import re
-                    profile_data["skills"] = [s.strip() for s in re.split(r"[,;]+", skills) if s.strip()]
+
+                    profile_data["skills"] = [
+                        s.strip() for s in re.split(r"[,;]+", skills) if s.strip()
+                    ]
                 else:
                     profile_data["skills"] = []
 
