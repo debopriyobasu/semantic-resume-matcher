@@ -1,10 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 850 600" width="100%" height="100%">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1060 950" width="100%" height="100%">
     <defs>
-        <!-- Shadow filter -->
         <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
-            <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.08"/>
+            <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#000000" flood-opacity="0.08"/>
         </filter>
-        <!-- Gradients -->
         <linearGradient id="gradient-client" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stop-color="#FAF5FF"/>
             <stop offset="100%" stop-color="#F3E8FF"/>
@@ -21,125 +19,223 @@
             <stop offset="0%" stop-color="#FFF7ED"/>
             <stop offset="100%" stop-color="#FFEDD5"/>
         </linearGradient>
-        <!-- Arrowhead markers -->
-        <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
             <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#4B5563"/>
         </marker>
-        <marker id="arrow-gray" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <marker id="arrow-dashed" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
             <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#9CA3AF"/>
         </marker>
     </defs>
 
     <!-- Background -->
-    <rect width="850" height="600" fill="#FCFCFD" rx="8"/>
+    <rect width="1060" height="950" fill="#FCFCFD" rx="8"/>
 
-    <!-- ==================== CONTAINER 1: CLIENT ==================== -->
-    <rect x="40" y="40" width="220" height="520" rx="12" fill="url(#gradient-client)" stroke="#D8B4FE" stroke-width="2" filter="url(#shadow)"/>
-    <text x="150" y="70" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="#581C87">Client / Recruiter UI</text>
+    <!-- ======= CONTAINER 1: CLIENT ======= -->
+    <rect x="22" y="22" width="200" height="740" rx="12" fill="url(#gradient-client)" stroke="#D8B4FE" stroke-width="2" filter="url(#shadow)"/>
+    <text x="122" y="48" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" font-weight="bold" fill="#581C87">Client / Recruiter UI</text>
 
     <!-- Node A: Candidate PDF Resume -->
-    <rect x="60" y="100" width="180" height="60" rx="8" fill="#FFFFFF" stroke="#C084FC" stroke-width="1.5" filter="url(#shadow)"/>
-    <text x="150" y="135" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="bold" fill="#581C87">Candidate PDF Resume</text>
+    <rect x="37" y="68" width="170" height="52" rx="8" fill="#FFFFFF" stroke="#C084FC" stroke-width="1.5" filter="url(#shadow)"/>
+    <text x="122" y="99" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" font-weight="bold" fill="#581C87">Candidate PDF Resume</text>
 
-    <!-- Node H: Explainable Match Results -->
-    <rect x="60" y="440" width="180" height="60" rx="8" fill="#FFFFFF" stroke="#C084FC" stroke-width="1.5" filter="url(#shadow)"/>
-    <text x="150" y="475" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="bold" fill="#581C87">Explainable Match Results</text>
+    <!-- Node H: Match Results (output) -->
+    <rect x="37" y="435" width="170" height="52" rx="8" fill="#FFFFFF" stroke="#C084FC" stroke-width="1.5" filter="url(#shadow)"/>
+    <text x="122" y="456" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" font-weight="bold" fill="#581C87">Explainable</text>
+    <text x="122" y="471" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" font-weight="bold" fill="#581C87">Match Results</text>
 
+    <!-- Node I: Job Dataset CSV -->
+    <rect x="37" y="598" width="170" height="52" rx="8" fill="#FFFFFF" stroke="#C084FC" stroke-width="1.5" filter="url(#shadow)"/>
+    <text x="122" y="629" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" font-weight="bold" fill="#581C87">Job Dataset CSV</text>
 
-    <!-- ==================== CONTAINER 2: FASTAPI APP ==================== -->
-    <rect x="290" y="40" width="230" height="520" rx="12" fill="url(#gradient-app)" stroke="#7DD3FC" stroke-width="2" filter="url(#shadow)"/>
-    <text x="405" y="70" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="#0369A1">FastAPI Backend (Local)</text>
+    <!-- ======= CONTAINER 2: FASTAPI ======= -->
+    <rect x="242" y="22" width="210" height="740" rx="12" fill="url(#gradient-app)" stroke="#7DD3FC" stroke-width="2" filter="url(#shadow)"/>
+    <text x="347" y="48" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" font-weight="bold" fill="#0369A1">FastAPI Backend (Local)</text>
 
     <!-- Node B: PDF Text Extractor -->
-    <rect x="315" y="100" width="180" height="60" rx="8" fill="#FFFFFF" stroke="#38BDF8" stroke-width="1.5" filter="url(#shadow)"/>
-    <text x="405" y="130" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="bold" fill="#0369A1">PDF Text Extractor</text>
-    <text x="405" y="146" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#0369A1">(pyPDF)</text>
+    <rect x="258" y="68" width="178" height="52" rx="8" fill="#FFFFFF" stroke="#38BDF8" stroke-width="1.5" filter="url(#shadow)"/>
+    <text x="347" y="93" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" font-weight="bold" fill="#0369A1">PDF Text Extractor</text>
+    <text x="347" y="108" text-anchor="middle" font-family="system-ui,sans-serif" font-size="9" fill="#0369A1">(pyPDF)  —  POST /upload-resume</text>
 
     <!-- Node C: Profile Structurer -->
-    <rect x="315" y="240" width="180" height="60" rx="8" fill="#FFFFFF" stroke="#38BDF8" stroke-width="1.5" filter="url(#shadow)"/>
-    <text x="405" y="270" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="bold" fill="#0369A1">Profile Structurer</text>
-    <text x="405" y="286" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#0369A1">&amp; Validator (Pydantic)</text>
+    <rect x="258" y="175" width="178" height="52" rx="8" fill="#FFFFFF" stroke="#38BDF8" stroke-width="1.5" filter="url(#shadow)"/>
+    <text x="347" y="200" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" font-weight="bold" fill="#0369A1">Profile Structurer</text>
+    <text x="347" y="216" text-anchor="middle" font-family="system-ui,sans-serif" font-size="9" fill="#0369A1">&amp; Validator (Pydantic)</text>
 
     <!-- Node D: Matchmaker -->
-    <rect x="315" y="440" width="180" height="60" rx="8" fill="#FFFFFF" stroke="#38BDF8" stroke-width="1.5" filter="url(#shadow)"/>
-    <text x="405" y="470" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="bold" fill="#0369A1">Matchmaker &amp;</text>
-    <text x="405" y="486" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#0369A1">Filtering Engine</text>
+    <rect x="258" y="360" width="178" height="52" rx="8" fill="#FFFFFF" stroke="#38BDF8" stroke-width="1.5" filter="url(#shadow)"/>
+    <text x="347" y="381" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" font-weight="bold" fill="#0369A1">Matchmaker &amp;</text>
+    <text x="347" y="397" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" fill="#0369A1">Filtering Engine  —  GET /candidate/{id}/matches</text>
 
+    <!-- Node J: Job Dataset Ingestion -->
+    <rect x="258" y="540" width="178" height="60" rx="8" fill="#FFFFFF" stroke="#38BDF8" stroke-width="1.5" filter="url(#shadow)"/>
+    <text x="347" y="562" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" font-weight="bold" fill="#0369A1">Job Dataset Ingestion</text>
+    <text x="347" y="576" text-anchor="middle" font-family="system-ui,sans-serif" font-size="8.5" fill="#0369A1">POST /jobs/upload</text>
+    <text x="347" y="591" text-anchor="middle" font-family="system-ui,sans-serif" font-size="8" fill="#6B7280">?mode=update | replace</text>
 
-    <!-- ==================== CONTAINER 3: POSTGRESQL DB ==================== -->
-    <rect x="550" y="40" width="260" height="240" rx="12" fill="url(#gradient-db)" stroke="#86EFAC" stroke-width="2" filter="url(#shadow)"/>
-    <text x="680" y="70" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="#15803D">PostgreSQL DB (pgvector)</text>
+    <!-- Node K: Status/Delete endpoints -->
+    <rect x="258" y="618" width="178" height="42" rx="8" fill="#EFF6FF" stroke="#93C5FD" stroke-width="1.5" filter="url(#shadow)"/>
+    <text x="347" y="637" text-anchor="middle" font-family="system-ui,sans-serif" font-size="8.5" fill="#1D4ED8">GET /jobs/embedding-status</text>
+    <text x="347" y="651" text-anchor="middle" font-family="system-ui,sans-serif" font-size="8.5" fill="#1D4ED8">DELETE /jobs</text>
+
+    <!-- Node L: Health + Metrics -->
+    <rect x="258" y="672" width="178" height="34" rx="8" fill="#F0FDF4" stroke="#86EFAC" stroke-width="1.5" filter="url(#shadow)"/>
+    <text x="347" y="693" text-anchor="middle" font-family="system-ui,sans-serif" font-size="8.5" fill="#15803D">GET /health  •  GET /metrics</text>
+
+    <!-- ======= CONTAINER 3: POSTGRESQL DB ======= -->
+    <rect x="482" y="22" width="290" height="258" rx="12" fill="url(#gradient-db)" stroke="#86EFAC" stroke-width="2" filter="url(#shadow)"/>
+    <text x="627" y="48" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" font-weight="bold" fill="#15803D">PostgreSQL DB (pgvector)</text>
 
     <!-- Node E1: Relational Data -->
-    <path d="M585,115 A95,15 0 0,0 775,115 L775,145 A95,15 0 0,1 585,145 Z" fill="#FFFFFF" stroke="#4ADE80" stroke-width="1.5" filter="url(#shadow)"/>
-    <ellipse cx="680" cy="115" rx="95" ry="15" fill="#FFFFFF" stroke="#4ADE80" stroke-width="1.5"/>
-    <text x="680" y="132" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="bold" fill="#15803D">Relational Data</text>
-    <text x="680" y="146" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#15803D">(Candidates, Jobs)</text>
+    <path d="M508,92 A100,14 0 0,0 750,92 L750,128 A100,14 0 0,1 508,128 Z" fill="#FFFFFF" stroke="#4ADE80" stroke-width="1.5" filter="url(#shadow)"/>
+    <ellipse cx="629" cy="92" rx="121" ry="14" fill="#FFFFFF" stroke="#4ADE80" stroke-width="1.5"/>
+    <text x="629" y="114" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" font-weight="bold" fill="#15803D">Relational Data</text>
+    <text x="629" y="128" text-anchor="middle" font-family="system-ui,sans-serif" font-size="9" fill="#15803D">(Candidates, Jobs)</text>
 
     <!-- Node E2: Vector Store -->
-    <path d="M585,205 A95,15 0 0,0 775,205 L775,235 A95,15 0 0,1 585,235 Z" fill="#FFFFFF" stroke="#4ADE80" stroke-width="1.5" filter="url(#shadow)"/>
-    <ellipse cx="680" cy="205" rx="95" ry="15" fill="#FFFFFF" stroke="#4ADE80" stroke-width="1.5"/>
-    <text x="680" y="222" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="bold" fill="#15803D">Vector Store</text>
-    <text x="680" y="236" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#15803D">(pgvector Embeddings)</text>
+    <path d="M508,185 A100,14 0 0,0 750,185 L750,221 A100,14 0 0,1 508,221 Z" fill="#FFFFFF" stroke="#4ADE80" stroke-width="1.5" filter="url(#shadow)"/>
+    <ellipse cx="629" cy="185" rx="121" ry="14" fill="#FFFFFF" stroke="#4ADE80" stroke-width="1.5"/>
+    <text x="629" y="207" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" font-weight="bold" fill="#15803D">Vector Store</text>
+    <text x="629" y="221" text-anchor="middle" font-family="system-ui,sans-serif" font-size="9" fill="#15803D">(pgvector Embeddings)</text>
 
-
-    <!-- ==================== CONTAINER 4: OLLAMA LLM ==================== -->
-    <rect x="550" y="300" width="260" height="260" rx="12" fill="url(#gradient-ai)" stroke="#FDBA74" stroke-width="2" filter="url(#shadow)"/>
-    <text x="680" y="330" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="bold" fill="#C2410C">Ollama LLM Engine (Local)</text>
+    <!-- ======= CONTAINER 4: OLLAMA LLM ======= -->
+    <rect x="482" y="300" width="290" height="260" rx="12" fill="url(#gradient-ai)" stroke="#FDBA74" stroke-width="2" filter="url(#shadow)"/>
+    <text x="627" y="326" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" font-weight="bold" fill="#C2410C">Ollama LLM Engine (Local)</text>
 
     <!-- Node F1: nomic-embed-text -->
-    <rect x="590" y="360" width="180" height="60" rx="8" fill="#FFFFFF" stroke="#FB923C" stroke-width="1.5" filter="url(#shadow)"/>
-    <text x="680" y="390" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="bold" fill="#C2410C">nomic-embed-text</text>
-    <text x="680" y="406" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#C2410C">(Embeddings Model)</text>
+    <rect x="530" y="348" width="198" height="52" rx="8" fill="#FFFFFF" stroke="#FB923C" stroke-width="1.5" filter="url(#shadow)"/>
+    <text x="629" y="374" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" font-weight="bold" fill="#C2410C">nomic-embed-text</text>
+    <text x="629" y="389" text-anchor="middle" font-family="system-ui,sans-serif" font-size="9" fill="#C2410C">(Embeddings Model)</text>
 
     <!-- Node F2: gemma3 / llama3.2 -->
-    <rect x="590" y="460" width="180" height="60" rx="8" fill="#FFFFFF" stroke="#FB923C" stroke-width="1.5" filter="url(#shadow)"/>
-    <text x="680" y="490" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="bold" fill="#C2410C">gemma3 / llama3.2</text>
-    <text x="680" y="506" text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-size="10" fill="#C2410C">(Inference Model)</text>
+    <rect x="530" y="450" width="198" height="52" rx="8" fill="#FFFFFF" stroke="#FB923C" stroke-width="1.5" filter="url(#shadow)"/>
+    <text x="629" y="476" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" font-weight="bold" fill="#C2410C">gemma3 / llama3.2</text>
+    <text x="629" y="491" text-anchor="middle" font-family="system-ui,sans-serif" font-size="9" fill="#C2410C">(Inference Model)</text>
 
 
-    <!-- ==================== FLOWS / CONNECTIONS ==================== -->
-    <!-- A -> B: Upload Resume -->
-    <path d="M 240,130 L 307,130" fill="none" stroke="#4B5563" stroke-width="1.5" marker-end="url(#arrow)"/>
-    <text x="272" y="122" font-family="system-ui, -apple-system, sans-serif" font-size="9" font-weight="bold" fill="#374151" text-anchor="middle">Upload</text>
+    <!-- ============================================================ -->
+    <!-- ==================== STEP ARROWS =========================== -->
+    <!-- Numbers shown large on arrows; legend below explains them.  -->
+    <!-- ============================================================ -->
 
-    <!-- B -> C: Raw Text -->
-    <path d="M 405,160 L 405,232" fill="none" stroke="#4B5563" stroke-width="1.5" marker-end="url(#arrow)"/>
-    <text x="410" y="202" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#4B5563">Raw Text</text>
+    <!-- === RESUME PIPELINE === -->
 
-    <!-- C -> F2: 1. Structured Parse -->
-    <path d="M 495,280 L 530,280 L 530,490 L 582,490" fill="none" stroke="#4B5563" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#arrow)"/>
-    <text x="535" y="482" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#374151">1. Parse</text>
+    <!-- STEP 1: Candidate → PDF Text Extractor (Upload PDF) -->
+    <path d="M207,94 L250,94" fill="none" stroke="#4B5563" stroke-width="1.5" marker-end="url(#arrow)"/>
+    <text x="228" y="88" text-anchor="middle" font-family="system-ui,sans-serif" font-size="15" font-weight="bold" fill="#1E40AF">1</text>
 
-    <!-- C -> E1: 2. Save Profile -->
-    <path d="M 495,250 L 540,250 L 540,135 L 577,135" fill="none" stroke="#4B5563" stroke-width="1.5" marker-end="url(#arrow)"/>
-    <text x="545" y="128" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#374151">2. Save</text>
+    <!-- STEP 2: PDF Text Extractor → Profile Structurer (Raw Text) -->
+    <path d="M347,120 L347,167" fill="none" stroke="#4B5563" stroke-width="1.5" marker-end="url(#arrow)"/>
+    <text x="354" y="148" text-anchor="start" font-family="system-ui,sans-serif" font-size="15" font-weight="bold" fill="#1E40AF">2</text>
 
-    <!-- C -> F1: 3. Request Vector & 4. Return Vector -->
-    <path d="M 495,270 L 550,270 L 550,390 L 582,390" fill="none" stroke="#4B5563" stroke-width="1.5" marker-end="url(#arrow)"/>
-    <text x="555" y="382" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#374151">3. Embed</text>
+    <!-- STEP 3: Profile Structurer → gemma3 (LLM Parse) -->
+    <path d="M436,210 L490,210 L490,465 L522,465" fill="none" stroke="#4B5563" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#arrow)"/>
+    <text x="440" y="207" text-anchor="start" font-family="system-ui,sans-serif" font-size="15" font-weight="bold" fill="#1E40AF">3</text>
 
-    <!-- C -> E2: 5. Save Embedding -->
-    <path d="M 495,260 L 545,260 L 545,220 L 577,220" fill="none" stroke="#4B5563" stroke-width="1.5" marker-end="url(#arrow)"/>
-    <text x="548" y="213" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#374151">5. Save Vector</text>
+    <!-- STEP 4: gemma3 → Profile Structurer (Return Structured Profile) -->
+    <path d="M522,476 L490,476 L490,227 L436,227" fill="none" stroke="#4B5563" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#arrow)"/>
+    <text x="440" y="244" text-anchor="start" font-family="system-ui,sans-serif" font-size="15" font-weight="bold" fill="#1E40AF">4</text>
 
-    <!-- D -> H: Explainable Matches -->
-    <path d="M 315,470 L 248,470" fill="none" stroke="#4B5563" stroke-width="1.5" marker-end="url(#arrow)"/>
-    <text x="281" y="462" font-family="system-ui, -apple-system, sans-serif" font-size="9" font-weight="bold" fill="#374151" text-anchor="middle">Matches</text>
+    <!-- STEP 5: Profile Structurer → Relational Data (Save Candidate) -->
+    <path d="M436,193 L470,193 L470,111 L500,111" fill="none" stroke="#4B5563" stroke-width="1.5" marker-end="url(#arrow)"/>
+    <text x="465" y="165" text-anchor="start" font-family="system-ui,sans-serif" font-size="15" font-weight="bold" fill="#1E40AF">5</text>
 
-    <!-- D -> E1: 6. Fetch Profiles/Jobs -->
-    <path d="M 495,450 L 525,450 L 525,145 L 577,145" fill="none" stroke="#4B5563" stroke-width="1.5" marker-end="url(#arrow)"/>
-    <text x="500" y="442" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#374151">6. Query</text>
+    <!-- STEP 6: Profile Structurer → nomic-embed-text (Request Embedding) -->
+    <path d="M436,201 L480,201 L480,374 L522,374" fill="none" stroke="#4B5563" stroke-width="1.5" marker-end="url(#arrow)"/>
+    <text x="484" y="290" text-anchor="start" font-family="system-ui,sans-serif" font-size="15" font-weight="bold" fill="#1E40AF">6</text>
 
-    <!-- D <-> E2: 7. Cosine Similarity -->
-    <path d="M 495,460 L 535,460 L 535,230 L 577,230" fill="none" stroke="#4B5563" stroke-width="1.5" marker-end="url(#arrow)"/>
-    <text x="540" y="247" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#374151">7. Similarity</text>
+    <!-- STEP 7: nomic-embed-text → Profile Structurer (Return Embedding) -->
+    <path d="M522,363 L475,363 L475,218 L436,218" fill="none" stroke="#4B5563" stroke-width="1.5" marker-end="url(#arrow)"/>
+    <text x="476" y="310" text-anchor="start" font-family="system-ui,sans-serif" font-size="15" font-weight="bold" fill="#1E40AF">7</text>
 
-    <!-- D <-> F2: 9. Run Fit Analysis -->
-    <path d="M 495,480 L 582,480" fill="none" stroke="#4B5563" stroke-width="1.5" marker-end="url(#arrow)"/>
-    <text x="538" y="474" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#374151" text-anchor="middle">9. Fit Reasoning</text>
+    <!-- STEP 8: Profile Structurer → Vector Store (Save Embedding) -->
+    <path d="M436,186 L462,186 L462,200 L500,200" fill="none" stroke="#4B5563" stroke-width="1.5" marker-end="url(#arrow)"/>
+    <text x="453" y="183" text-anchor="middle" font-family="system-ui,sans-serif" font-size="15" font-weight="bold" fill="#1E40AF">8</text>
 
-    <!-- D -> E1: 10. Store Results -->
-    <path d="M 495,440 L 520,440 L 520,125 L 577,125" fill="none" stroke="#4B5563" stroke-width="1.5" marker-end="url(#arrow)"/>
-    <text x="500" y="432" font-family="system-ui, -apple-system, sans-serif" font-size="9" fill="#374151">10. Store</text>
+    <!-- STEP 9: Matchmaker → Relational Data (Fetch Jobs + Profiles) -->
+    <path d="M436,372 L463,372 L463,120 L500,120" fill="none" stroke="#4B5563" stroke-width="1.5" marker-end="url(#arrow)"/>
+    <text x="445" y="340" text-anchor="start" font-family="system-ui,sans-serif" font-size="15" font-weight="bold" fill="#1E40AF">9</text>
+
+    <!-- STEP 10: Matchmaker → Vector Store (Cosine Similarity) -->
+    <path d="M436,380 L458,380 L458,210 L500,210" fill="none" stroke="#4B5563" stroke-width="1.5" marker-end="url(#arrow)"/>
+    <text x="441" y="357" text-anchor="start" font-family="system-ui,sans-serif" font-size="15" font-weight="bold" fill="#1E40AF">10</text>
+
+    <!-- STEP 11: Matchmaker → gemma3 (Explain Fit) -->
+    <path d="M436,400 L494,400 L494,476 L522,476" fill="none" stroke="#4B5563" stroke-width="1.5" marker-end="url(#arrow)"/>
+    <text x="440" y="420" text-anchor="start" font-family="system-ui,sans-serif" font-size="15" font-weight="bold" fill="#1E40AF">11</text>
+
+    <!-- STEP 12: Matchmaker → Relational Data (Store Match Results) -->
+    <path d="M436,363 L455,363 L455,130 L500,130" fill="none" stroke="#4B5563" stroke-width="1.5" marker-end="url(#arrow)"/>
+    <text x="447" y="333" text-anchor="start" font-family="system-ui,sans-serif" font-size="15" font-weight="bold" fill="#1E40AF">12</text>
+
+    <!-- STEP 13: Matchmaker → Match Results client (Return Matches) -->
+    <path d="M258,386 L215,461" fill="none" stroke="#4B5563" stroke-width="1.5" marker-end="url(#arrow)"/>
+    <text x="228" y="420" text-anchor="middle" font-family="system-ui,sans-serif" font-size="15" font-weight="bold" fill="#1E40AF">13</text>
+
+    <!-- === JOB PIPELINE (lettered A–D) === -->
+
+    <!-- STEP A: Job Dataset CSV → Job Ingestion (Upload CSV) -->
+    <path d="M207,624 L250,570" fill="none" stroke="#4B5563" stroke-width="1.5" marker-end="url(#arrow)"/>
+    <text x="222" y="600" text-anchor="middle" font-family="system-ui,sans-serif" font-size="15" font-weight="bold" fill="#6D28D9">A</text>
+
+    <!-- STEP B: Job Ingestion → Relational Data (Save Jobs) -->
+    <path d="M436,555 L468,555 L468,140 L500,140" fill="none" stroke="#4B5563" stroke-width="1.5" marker-end="url(#arrow)"/>
+    <text x="451" y="540" text-anchor="start" font-family="system-ui,sans-serif" font-size="15" font-weight="bold" fill="#6D28D9">B</text>
+
+    <!-- STEP C: Job Ingestion → nomic-embed-text (async, dashed) -->
+    <path d="M436,570 L500,570 L500,400 L522,400" fill="none" stroke="#9CA3AF" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrow-dashed)"/>
+    <text x="503" y="490" text-anchor="start" font-family="system-ui,sans-serif" font-size="15" font-weight="bold" fill="#6D28D9">C</text>
+
+    <!-- STEP D: Job Ingestion → Vector Store (Save Job Vectors) -->
+    <path d="M436,563 L484,563 L484,217 L500,217" fill="none" stroke="#4B5563" stroke-width="1.5" marker-end="url(#arrow)"/>
+    <text x="471" y="550" text-anchor="start" font-family="system-ui,sans-serif" font-size="15" font-weight="bold" fill="#6D28D9">D</text>
+
+
+    <!-- ============================================================ -->
+    <!-- ==================== LEGEND (bottom right) ================= -->
+    <!-- ============================================================ -->
+
+    <!-- Legend background panel -->
+    <rect x="488" y="580" width="560" height="360" rx="10" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1.5" filter="url(#shadow)"/>
+    <text x="768" y="606" text-anchor="middle" font-family="system-ui,sans-serif" font-size="13" font-weight="bold" fill="#1E293B">Step Reference</text>
+
+    <!-- Divider -->
+    <line x1="508" y1="614" x2="1030" y2="614" stroke="#CBD5E1" stroke-width="1"/>
+
+    <!-- Resume Pipeline header -->
+    <text x="510" y="632" font-family="system-ui,sans-serif" font-size="11" font-weight="bold" fill="#1E40AF">Resume Pipeline</text>
+    <!-- Steps left column -->
+    <text x="510" y="650" font-family="system-ui,sans-serif" font-size="10" fill="#374151"><tspan font-weight="bold" fill="#1E40AF">1</tspan>  Upload PDF to server</text>
+    <text x="510" y="665" font-family="system-ui,sans-serif" font-size="10" fill="#374151"><tspan font-weight="bold" fill="#1E40AF">2</tspan>  Extract raw text (pyPDF)</text>
+    <text x="510" y="680" font-family="system-ui,sans-serif" font-size="10" fill="#374151"><tspan font-weight="bold" fill="#1E40AF">3</tspan>  LLM parse resume text → structured profile</text>
+    <text x="510" y="695" font-family="system-ui,sans-serif" font-size="10" fill="#374151"><tspan font-weight="bold" fill="#1E40AF">4</tspan>  Return structured profile from LLM</text>
+    <text x="510" y="710" font-family="system-ui,sans-serif" font-size="10" fill="#374151"><tspan font-weight="bold" fill="#1E40AF">5</tspan>  Save candidate profile to Relational DB</text>
+    <text x="510" y="725" font-family="system-ui,sans-serif" font-size="10" fill="#374151"><tspan font-weight="bold" fill="#1E40AF">6</tspan>  Request embedding from nomic-embed-text</text>
+    <text x="510" y="740" font-family="system-ui,sans-serif" font-size="10" fill="#374151"><tspan font-weight="bold" fill="#1E40AF">7</tspan>  Return candidate vector embedding</text>
+    <!-- Steps right column -->
+    <text x="780" y="650" font-family="system-ui,sans-serif" font-size="10" fill="#374151"><tspan font-weight="bold" fill="#1E40AF">8</tspan>  Save embedding to Vector Store (pgvector)</text>
+    <text x="780" y="665" font-family="system-ui,sans-serif" font-size="10" fill="#374151"><tspan font-weight="bold" fill="#1E40AF">9</tspan>  Fetch job postings + candidate profiles</text>
+    <text x="780" y="680" font-family="system-ui,sans-serif" font-size="10" fill="#374151"><tspan font-weight="bold" fill="#1E40AF">10</tspan>  Cosine similarity search across job vectors</text>
+    <text x="780" y="695" font-family="system-ui,sans-serif" font-size="10" fill="#374151"><tspan font-weight="bold" fill="#1E40AF">11</tspan>  LLM explain fit / gap analysis per job</text>
+    <text x="780" y="710" font-family="system-ui,sans-serif" font-size="10" fill="#374151"><tspan font-weight="bold" fill="#1E40AF">12</tspan>  Store ranked match results to Relational DB</text>
+    <text x="780" y="725" font-family="system-ui,sans-serif" font-size="10" fill="#374151"><tspan font-weight="bold" fill="#1E40AF">13</tspan>  Return explainable matches to client</text>
+
+    <!-- Divider -->
+    <line x1="508" y1="742" x2="1030" y2="742" stroke="#CBD5E1" stroke-width="1"/>
+
+    <!-- Job Upload Pipeline header -->
+    <text x="510" y="760" font-family="system-ui,sans-serif" font-size="11" font-weight="bold" fill="#6D28D9">Job Upload Pipeline</text>
+    <text x="510" y="778" font-family="system-ui,sans-serif" font-size="10" fill="#374151"><tspan font-weight="bold" fill="#6D28D9">A</tspan>  Upload job CSV (POST /jobs/upload, mode=update|replace)</text>
+    <text x="510" y="793" font-family="system-ui,sans-serif" font-size="10" fill="#374151"><tspan font-weight="bold" fill="#6D28D9">B</tspan>  Upsert job postings to Relational DB</text>
+    <text x="510" y="808" font-family="system-ui,sans-serif" font-size="10" fill="#374151"><tspan font-weight="bold" fill="#6D28D9">C</tspan>  Generate job embeddings via nomic-embed-text (async background task)</text>
+    <text x="510" y="823" font-family="system-ui,sans-serif" font-size="10" fill="#374151"><tspan font-weight="bold" fill="#6D28D9">D</tspan>  Save job embedding vectors to Vector Store</text>
+
+    <!-- Divider -->
+    <line x1="508" y1="833" x2="1030" y2="833" stroke="#CBD5E1" stroke-width="1"/>
+
+    <!-- Note on dashed lines -->
+    <line x1="510" y1="850" x2="540" y2="850" stroke="#9CA3AF" stroke-width="1.5" stroke-dasharray="4,2"/>
+    <text x="546" y="854" font-family="system-ui,sans-serif" font-size="9" fill="#6B7280">Dashed lines = asynchronous background tasks</text>
+
+    <text x="510" y="870" font-family="system-ui,sans-serif" font-size="9" font-style="italic" fill="#9CA3AF">Blue numbers (1-13) = Resume pipeline  |  Purple letters (A-D) = Job upload pipeline</text>
+
 </svg>

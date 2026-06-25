@@ -89,9 +89,7 @@ def test_extract_profile_validation_failure(mock_post, parser):
     mock_response = MagicMock()
     mock_response.status_code = 200
     mock_response.json.return_value = {
-        "message": {
-            "content": '{"name": {"first": "John"}, "experience_years": 5}'
-        }
+        "message": {"content": '{"name": {"first": "John"}, "experience_years": 5}'}
     }
     mock_post.return_value = mock_response
 
@@ -103,11 +101,7 @@ def test_extract_profile_validation_failure(mock_post, parser):
 def test_extract_profile_empty_response(mock_post, parser):
     mock_response = MagicMock()
     mock_response.status_code = 200
-    mock_response.json.return_value = {
-        "message": {
-            "content": ""
-        }
-    }
+    mock_response.json.return_value = {"message": {"content": ""}}
     mock_post.return_value = mock_response
 
     with pytest.raises(ResumeParseError, match="Failed to parse model response as JSON"):

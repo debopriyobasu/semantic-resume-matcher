@@ -27,7 +27,11 @@ def run():
             prompt_content = ""
             if messages:
                 prompt_content = messages[-1].get("content", "")
-            if "strong fit" in prompt_content or "Evaluation criteria" in prompt_content or "candidate_profile" in prompt_content:
+            if (
+                "strong fit" in prompt_content
+                or "Evaluation criteria" in prompt_content
+                or "candidate_profile" in prompt_content
+            ):
                 mock_response.json.return_value = {
                     "message": {
                         "content": json.dumps(

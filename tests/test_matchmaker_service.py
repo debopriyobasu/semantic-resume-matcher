@@ -82,11 +82,7 @@ def test_evaluate_matches_json_decode_error(matchmaker_service):
 
         mock_response = MagicMock()
         mock_response.status_code = 200
-        mock_response.json.return_value = {
-            "message": {
-                "content": '{"broken_json'
-            }
-        }
+        mock_response.json.return_value = {"message": {"content": '{"broken_json'}}
         mock_post.return_value = mock_response
 
         matchmaker_service.evaluate_matches(db_mock, uuid.uuid4())
@@ -124,9 +120,7 @@ def test_evaluate_matches_validation_error(matchmaker_service):
         mock_response = MagicMock()
         mock_response.status_code = 200
         mock_response.json.return_value = {
-            "message": {
-                "content": '{"confidence": "not a float", "match_category": "INVALID"}'
-            }
+            "message": {"content": '{"confidence": "not a float", "match_category": "INVALID"}'}
         }
         mock_post.return_value = mock_response
 

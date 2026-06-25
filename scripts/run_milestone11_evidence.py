@@ -55,7 +55,7 @@ def mock_httpx_post(url, **kwargs):
     json_data = kwargs.get("json", {})
     messages = json_data.get("messages", [])
     prompt_content = messages[-1].get("content", "") if messages else ""
-    
+
     print("=== FULLY RENDERED PROMPT ===")
     print(prompt_content)
     print("=============================\n")
@@ -74,11 +74,7 @@ def mock_httpx_post(url, **kwargs):
 
     mock_resp = MagicMock()
     mock_resp.status_code = 200
-    mock_resp.json.return_value = {
-        "message": {
-            "content": raw_response
-        }
-    }
+    mock_resp.json.return_value = {"message": {"content": raw_response}}
     return mock_resp
 
 

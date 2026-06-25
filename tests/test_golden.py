@@ -101,9 +101,7 @@ def get_golden_cases():
 @patch("src.services.resume_parser.PdfReader")
 @patch("src.services.search_service.search_repository.find_similar_jobs")
 @patch("httpx.post")
-def test_golden_regression_cases(
-    mock_post, mock_find_similar_jobs, mock_pdf_reader, case_prefix
-):
+def test_golden_regression_cases(mock_post, mock_find_similar_jobs, mock_pdf_reader, case_prefix):
     # Load case files
     resume_path = os.path.join(GOLDEN_DIR, f"{case_prefix}_resume.txt")
     job_path = os.path.join(GOLDEN_DIR, f"{case_prefix}_job.json")
@@ -176,15 +174,11 @@ def test_golden_regression_cases(
                 prompt_content = messages[-1].get("content", "")
             if "strong fit" in prompt_content or "Evaluation criteria" in prompt_content:
                 mock_response.json.return_value = {
-                    "message": {
-                        "content": json.dumps(expected_data["mock_gemini_match"])
-                    }
+                    "message": {"content": json.dumps(expected_data["mock_gemini_match"])}
                 }
             else:
                 mock_response.json.return_value = {
-                    "message": {
-                        "content": json.dumps(expected_data["mock_gemini_profile"])
-                    }
+                    "message": {"content": json.dumps(expected_data["mock_gemini_profile"])}
                 }
         return mock_response
 
