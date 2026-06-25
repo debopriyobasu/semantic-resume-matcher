@@ -2,8 +2,8 @@ import json
 import logging
 import time
 import uuid
-import httpx
 
+import httpx
 from google import genai
 from pydantic import ValidationError
 from sqlalchemy.orm import Session

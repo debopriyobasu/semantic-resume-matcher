@@ -1,7 +1,7 @@
 import logging
 import time
-import httpx
 
+import httpx
 from google import genai
 from google.genai.errors import APIError
 

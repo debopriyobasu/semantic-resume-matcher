@@ -4,12 +4,12 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 from src.core.config import Settings
-from src.core.exceptions import ResumeParseError, MatchmakingError
-from src.services.resume_parser import ResumeParserService
-from src.services.embedding_service import EmbeddingService, EmbeddingError
-from src.services.matchmaker_service import MatchmakerService
+from src.core.exceptions import ResumeParseError
 from src.schemas.candidate import CandidateProfile
 from src.schemas.matchmaker import MatchEvaluation
+from src.services.embedding_service import EmbeddingError, EmbeddingService
+from src.services.matchmaker_service import MatchmakerService
+from src.services.resume_parser import ResumeParserService
 
 
 @pytest.fixture

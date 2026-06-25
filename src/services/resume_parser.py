@@ -1,7 +1,7 @@
 import io
 import json
-import httpx
 
+import httpx
 from google import genai
 from pydantic import ValidationError
 from pypdf import PdfReader
