@@ -21,7 +21,13 @@ class EmbeddingError(Exception):
 class EmbeddingService:
     def __init__(self) -> None:
         self.settings = get_settings()
-        self.client = genai.Client(api_key=self.settings.google_api_key)
+        self._client = None
+
+    @property
+    def client(self) -> genai.Client:
+        if self._client is None:
+            self._client = genai.Client(api_key=self.settings.google_api_key)
+        return self._client
 
     def generate_embedding(self, text: str) -> list[float]:
         """Generate an embedding for the given text using Gemini or Ollama, normalized to exactly 768 dimensions."""
