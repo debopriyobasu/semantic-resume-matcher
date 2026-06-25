@@ -1,7 +1,6 @@
 import sys
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
-from google import genai
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
 
@@ -51,47 +50,51 @@ print("--- 5. Fully rendered prompt for one real candidate/job pair ---")
 print("--- 6. Raw Gemini response ---")
 print("--- 7. Parsed MatchEvaluation Pydantic object ---")
 
-original_generate_content = genai.models.Models.generate_content
 
-
-def mock_generate_content(self, model, contents, config, **kwargs):
+def mock_httpx_post(url, **kwargs):
+    json_data = kwargs.get("json", {})
+    messages = json_data.get("messages", [])
+    prompt_content = messages[-1].get("content", "") if messages else ""
+    
     print("=== FULLY RENDERED PROMPT ===")
-    print(contents)
+    print(prompt_content)
     print("=============================\n")
 
-    class MockResponse:
-        def __init__(self):
-            self.text = """```json
-{
+    raw_response = """{
   "confidence": 0.88,
   "match_category": "STRONG_MATCH",
   "reasoning": "Strong alignment on Python, FastAPI, and SQLAlchemy. Good experience level.",
   "skill_gaps": ["PostgreSQL specific administration"],
   "standout_strengths": ["Docker", "Backend Engineering"]
-}
-```"""
+}"""
 
-    response = MockResponse()
+    print("=== RAW RESPONSE ===")
+    print(raw_response)
+    print("====================\n")
 
-    print("=== RAW GEMINI RESPONSE ===")
-    print(response.text)
-    print("===========================\n")
-    return response
+    mock_resp = MagicMock()
+    mock_resp.status_code = 200
+    mock_resp.json.return_value = {
+        "message": {
+            "content": raw_response
+        }
+    }
+    return mock_resp
 
 
-original_call = MatchmakerService._call_gemini_with_retries
+original_call = MatchmakerService._call_model_with_retries
 
 
-def mock_call(self, client, prompt):
-    eval_obj = original_call(self, client, prompt)
+def mock_call(self, prompt):
+    eval_obj = original_call(self, prompt)
     print("=== PARSED Pydantic Object ===")
     print(eval_obj.model_dump_json(indent=2))
     print("==============================\n")
     return eval_obj
 
 
-with patch("google.genai.models.Models.generate_content", new=mock_generate_content):
-    with patch.object(MatchmakerService, "_call_gemini_with_retries", new=mock_call):
+with patch("httpx.post", side_effect=mock_httpx_post):
+    with patch.object(MatchmakerService, "_call_model_with_retries", new=mock_call):
         service = MatchmakerService()
         service.evaluate_matches(db, candidate_id)
 

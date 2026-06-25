@@ -33,14 +33,18 @@ def test_evaluate_matches_happy_path(matchmaker_service):
 
     with (
         patch("src.services.matchmaker_service.match_result_repository") as mock_repo,
-        patch("src.services.matchmaker_service.genai.Client") as MockClient,
+        patch("httpx.post") as mock_post,
     ):
         mock_repo.get_pending_matches.return_value = [mock_match]
 
-        mock_client = MockClient.return_value
         mock_response = MagicMock()
-        mock_response.text = '{"confidence": 0.9, "match_category": "STRONG_MATCH", "reasoning": "Good fit", "skill_gaps": [], "standout_strengths": ["Python"]}'
-        mock_client.models.generate_content.return_value = mock_response
+        mock_response.status_code = 200
+        mock_response.json.return_value = {
+            "message": {
+                "content": '{"confidence": 0.9, "match_category": "STRONG_MATCH", "reasoning": "Good fit", "skill_gaps": [], "standout_strengths": ["Python"]}'
+            }
+        }
+        mock_post.return_value = mock_response
 
         matchmaker_service.evaluate_matches(db_mock, uuid.uuid4())
 
@@ -71,20 +75,24 @@ def test_evaluate_matches_json_decode_error(matchmaker_service):
 
     with (
         patch("src.services.matchmaker_service.match_result_repository") as mock_repo,
-        patch("src.services.matchmaker_service.genai.Client") as MockClient,
+        patch("httpx.post") as mock_post,
         patch("src.services.matchmaker_service.time.sleep"),
     ):
         mock_repo.get_pending_matches.return_value = [mock_match]
 
-        mock_client = MockClient.return_value
         mock_response = MagicMock()
-        mock_response.text = '{"broken_json'
-        mock_client.models.generate_content.return_value = mock_response
+        mock_response.status_code = 200
+        mock_response.json.return_value = {
+            "message": {
+                "content": '{"broken_json'
+            }
+        }
+        mock_post.return_value = mock_response
 
         matchmaker_service.evaluate_matches(db_mock, uuid.uuid4())
 
         assert mock_repo.update_match_result.call_count == 0
-        assert mock_client.models.generate_content.call_count == 4
+        assert mock_post.call_count == 4
 
 
 def test_evaluate_matches_validation_error(matchmaker_service):
@@ -108,17 +116,21 @@ def test_evaluate_matches_validation_error(matchmaker_service):
 
     with (
         patch("src.services.matchmaker_service.match_result_repository") as mock_repo,
-        patch("src.services.matchmaker_service.genai.Client") as MockClient,
+        patch("httpx.post") as mock_post,
         patch("src.services.matchmaker_service.time.sleep"),
     ):
         mock_repo.get_pending_matches.return_value = [mock_match]
 
-        mock_client = MockClient.return_value
         mock_response = MagicMock()
-        mock_response.text = '{"confidence": "not a float", "match_category": "INVALID"}'
-        mock_client.models.generate_content.return_value = mock_response
+        mock_response.status_code = 200
+        mock_response.json.return_value = {
+            "message": {
+                "content": '{"confidence": "not a float", "match_category": "INVALID"}'
+            }
+        }
+        mock_post.return_value = mock_response
 
         matchmaker_service.evaluate_matches(db_mock, uuid.uuid4())
 
         assert mock_repo.update_match_result.call_count == 0
-        assert mock_client.models.generate_content.call_count == 1
+        assert mock_post.call_count == 1

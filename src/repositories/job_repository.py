@@ -29,4 +29,3 @@ def delete_all_jobs(db: Session) -> int:
     result = db.execute(delete(JobPosting))
     db.commit()
     return result.rowcount
-

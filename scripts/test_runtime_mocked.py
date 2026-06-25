@@ -15,46 +15,50 @@ def run():
     print(json.dumps(resp_before.json(), indent=2))
 
     # Setup mocks
-    with (
-        patch("src.services.resume_parser.genai.Client") as mock_client_parser,
-        patch(
-            "src.services.embedding_service.EmbeddingService.generate_embedding"
-        ) as mock_generate_embedding,
-        patch("src.services.matchmaker_service.genai.Client") as mock_client_matchmaker,
-    ):
-        # Mock Parser
-        mock_parser_instance = mock_client_parser.return_value
-        mock_generate_content_parser = MagicMock()
-        mock_generate_content_parser.text = json.dumps(
-            {
-                "name": "Jane Doe",
-                "skills": ["Python", "FastAPI"],
-                "experience_years": 5,
-                "education": "BS CS",
-                "location": "Remote",
-            }
-        )
-        mock_parser_instance.models.generate_content.return_value = mock_generate_content_parser
+    def mock_httpx_post(url, **kwargs):
+        mock_response = MagicMock()
+        mock_response.status_code = 200
+        url_str = str(url)
+        if "embeddings" in url_str:
+            mock_response.json.return_value = {"embedding": [0.1] * 768}
+        elif "chat" in url_str:
+            json_data = kwargs.get("json", {})
+            messages = json_data.get("messages", [])
+            prompt_content = ""
+            if messages:
+                prompt_content = messages[-1].get("content", "")
+            if "strong fit" in prompt_content or "Evaluation criteria" in prompt_content or "candidate_profile" in prompt_content:
+                mock_response.json.return_value = {
+                    "message": {
+                        "content": json.dumps(
+                            {
+                                "confidence": 0.95,
+                                "match_category": "STRONG_MATCH",
+                                "reasoning": "Excellent fit.",
+                                "skill_gaps": [],
+                                "standout_strengths": ["Python"],
+                            }
+                        )
+                    }
+                }
+            else:
+                mock_response.json.return_value = {
+                    "message": {
+                        "content": json.dumps(
+                            {
+                                "name": "Jane Doe",
+                                "skills": ["Python", "FastAPI"],
+                                "experience_years": 5,
+                                "education": "BS CS",
+                                "location": "Remote",
+                            }
+                        )
+                    }
+                }
+        return mock_response
 
-        # Mock Embedder
-        mock_generate_embedding.return_value = [0.1] * 768
-
-        # Mock Matchmaker
-        mock_matchmaker_instance = mock_client_matchmaker.return_value
-        mock_generate_content_matchmaker = MagicMock()
-        mock_generate_content_matchmaker.text = json.dumps(
-            {
-                "confidence": 0.95,
-                "match_category": "STRONG_MATCH",
-                "reasoning": "Excellent fit.",
-                "skill_gaps": [],
-                "standout_strengths": ["Python"],
-            }
-        )
-        mock_matchmaker_instance.models.generate_content.return_value = (
-            mock_generate_content_matchmaker
-        )
-
+    # Setup mocks
+    with patch("httpx.post", side_effect=mock_httpx_post):
         print("\n--- UPLOADING RESUME ---")
         with open("resume.pdf", "rb") as f:
             resp_upload = client.post(

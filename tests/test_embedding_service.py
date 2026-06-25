@@ -5,34 +5,27 @@ import pytest
 from src.services.embedding_service import EmbeddingError, EmbeddingService
 
 
-@patch("src.services.embedding_service.genai.Client")
-def test_generate_embedding_success(mock_client_class: MagicMock) -> None:
-    mock_client = MagicMock()
-    mock_client_class.return_value = mock_client
-
+@patch("httpx.post")
+def test_generate_embedding_success(mock_post: MagicMock) -> None:
     mock_response = MagicMock()
-    mock_response.embeddings = [MagicMock(values=[0.1, 0.2, 0.3])]
-    mock_client.models.embed_content.return_value = mock_response
+    mock_response.status_code = 200
+    mock_response.json.return_value = {"embedding": [0.1, 0.2, 0.3]}
+    mock_post.return_value = mock_response
 
     service = EmbeddingService()
     embedding = service.generate_embedding("test text")
 
-    assert embedding == [0.1, 0.2, 0.3]
-    from google.genai import types
-
-    mock_client.models.embed_content.assert_called_once_with(
-        model="gemini-embedding-2",
-        contents="test text",
-        config=types.EmbedContentConfig(output_dimensionality=768),
-    )
+    assert len(embedding) == 768
+    assert embedding[0] == 0.1
+    assert embedding[1] == 0.2
+    assert embedding[2] == 0.3
+    assert all(v == 0.0 for v in embedding[3:])
+    mock_post.assert_called_once()
 
 
-@patch("src.services.embedding_service.genai.Client")
-def test_generate_embedding_failure(mock_client_class: MagicMock) -> None:
-    mock_client = MagicMock()
-    mock_client_class.return_value = mock_client
-
-    mock_client.models.embed_content.side_effect = Exception("API error")
+@patch("httpx.post")
+def test_generate_embedding_failure(mock_post: MagicMock) -> None:
+    mock_post.side_effect = Exception("API error")
 
     service = EmbeddingService()
     with pytest.raises(EmbeddingError):

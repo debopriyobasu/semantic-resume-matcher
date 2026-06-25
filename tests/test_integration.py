@@ -103,33 +103,47 @@ def setup_overrides(mock_db_session):
     app.dependency_overrides.clear()
 
 
-def mock_genai_generate_content(model, contents, **kwargs):
+def mock_httpx_post(url, **kwargs):
     mock_response = MagicMock()
-    # Check if the prompt contents contains evaluation criteria/strong fit,
-    # which implies matchmaker evaluation.
-    contents_str = str(contents)
-    if "strong fit" in contents_str or "Evaluation criteria" in contents_str:
-        mock_response.text = json.dumps(
-            {
-                "confidence": 0.92,
-                "match_category": "STRONG_MATCH",
-                "reasoning": "Excellent skill match.",
-                "skill_gaps": [],
-                "standout_strengths": ["Python", "FastAPI"],
+    mock_response.status_code = 200
+    url_str = str(url)
+    if "embeddings" in url_str:
+        mock_response.json.return_value = {"embedding": [0.1] * 768}
+    elif "chat" in url_str:
+        json_data = kwargs.get("json", {})
+        messages = json_data.get("messages", [])
+        prompt_content = ""
+        if messages:
+            prompt_content = messages[-1].get("content", "")
+        if "strong fit" in prompt_content or "Evaluation criteria" in prompt_content:
+            mock_response.json.return_value = {
+                "message": {
+                    "content": json.dumps(
+                        {
+                            "confidence": 0.92,
+                            "match_category": "STRONG_MATCH",
+                            "reasoning": "Excellent skill match.",
+                            "skill_gaps": [],
+                            "standout_strengths": ["Python", "FastAPI"],
+                        }
+                    )
+                }
             }
-        )
-    else:
-        # Otherwise it's resume profile extraction
-        mock_response.text = json.dumps(
-            {
-                "name": "John Doe",
-                "email": "john@example.com",
-                "skills": ["Python", "FastAPI"],
-                "experience_years": 5,
-                "education": "BSc",
-                "location": "New York",
+        else:
+            mock_response.json.return_value = {
+                "message": {
+                    "content": json.dumps(
+                        {
+                            "name": "John Doe",
+                            "email": "john@example.com",
+                            "skills": ["Python", "FastAPI"],
+                            "experience_years": 5,
+                            "education": "BSc",
+                            "location": "New York",
+                        }
+                    )
+                }
             }
-        )
     return mock_response
 
 
@@ -137,9 +151,9 @@ def mock_genai_generate_content(model, contents, **kwargs):
 @patch("builtins.open")
 @patch("src.services.resume_parser.PdfReader")
 @patch("src.services.search_service.search_repository.find_similar_jobs")
-@patch("google.genai.Client")
+@patch("httpx.post")
 def test_end_to_end_pipeline_flow(
-    MockGenaiClient,
+    mock_post,
     mock_find_similar_jobs,
     mock_pdf_reader,
     mock_open,
@@ -194,13 +208,8 @@ def test_end_to_end_pipeline_flow(
     )
     mock_pdf_reader.return_value.pages = [mock_page]
 
-    # Gemini Client Mock Setup
-    mock_client_instance = MockGenaiClient.return_value
-    mock_client_instance.models.generate_content.side_effect = mock_genai_generate_content
-
-    mock_embed_response = MagicMock()
-    mock_embed_response.embeddings = [MagicMock(values=[0.1] * 768)]
-    mock_client_instance.models.embed_content.return_value = mock_embed_response
+    # HTTP client mock setup
+    mock_post.side_effect = mock_httpx_post
 
     # Search Mocks
     mock_find_similar_jobs.return_value = [(job, 0.88)]

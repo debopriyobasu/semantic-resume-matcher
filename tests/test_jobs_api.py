@@ -253,7 +253,9 @@ def test_upload_jobs_invalid_format() -> None:
 
 def test_upload_jobs_missing_columns() -> None:
     # CSV missing 'description' column
-    csv_data = "title,company,location,remote_ok,visa_sponsorship,min_salary,max_salary,required_skills\n"
+    csv_data = (
+        "title,company,location,remote_ok,visa_sponsorship,min_salary,max_salary,required_skills\n"
+    )
     file = io.BytesIO(csv_data.encode("utf-8"))
     response = client.post(
         "/jobs/upload?mode=replace", files={"file": ("jobs.csv", file, "text/csv")}

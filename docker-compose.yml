@@ -4,7 +4,6 @@ services:
     environment:
       APP_NAME: ${APP_NAME:-Semantic Resume Matcher}
       DATABASE_URL: ${DATABASE_URL:-postgresql+psycopg://resume_matcher:resume_matcher@postgres:5432/resume_matcher}
-      GOOGLE_API_KEY: ${GOOGLE_API_KEY:-}
       USE_OLLAMA: ${USE_OLLAMA:-true}
       OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-http://host.docker.internal:11434}
       OLLAMA_LLM_MODEL: ${OLLAMA_LLM_MODEL:-llama3.2}

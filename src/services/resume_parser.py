@@ -2,7 +2,6 @@ import io
 import json
 
 import httpx
-from google import genai
 from pydantic import ValidationError
 from pypdf import PdfReader
 from pypdf.errors import PdfReadError
@@ -73,36 +72,23 @@ class ResumeParserService:
             settings = get_settings()
             prompt = render_prompt("resume_extraction.md", {"resume_text": text})
 
-            if settings.use_ollama:
-                try:
-                    response = httpx.post(
-                        f"{settings.ollama_base_url}/api/chat",
-                        json={
-                            "model": settings.ollama_llm_model,
-                            "messages": [{"role": "user", "content": prompt}],
-                            "stream": False,
-                            "options": {"temperature": 0.0},
-                            "format": "json",
-                        },
-                        timeout=60.0,
-                    )
-                    response.raise_for_status()
-                    response_json = response.json()
-                    response_text = response_json["message"]["content"]
-                except Exception as e:
-                    raise ResumeParseError(f"Error during Ollama extraction: {e}") from e
-            else:
-                client = genai.Client(api_key=settings.google_api_key)
-                response = client.models.generate_content(
-                    model="gemini-2.0-flash",
-                    contents=prompt,
-                    config=genai.types.GenerateContentConfig(
-                        response_mime_type="application/json",
-                    ),
+            try:
+                response = httpx.post(
+                    f"{settings.ollama_base_url}/api/chat",
+                    json={
+                        "model": settings.ollama_llm_model,
+                        "messages": [{"role": "user", "content": prompt}],
+                        "stream": False,
+                        "options": {"temperature": 0.0},
+                        "format": "json",
+                    },
+                    timeout=60.0,
                 )
-                if not response.text:
-                    raise ResumeParseError("Received empty response from Gemini.")
-                response_text = response.text
+                response.raise_for_status()
+                response_json = response.json()
+                response_text = response_json["message"]["content"]
+            except Exception as e:
+                raise ResumeParseError(f"Error during Ollama extraction: {e}") from e
 
             # Remove any markdown JSON block wrapping if present
             response_text = response_text.strip()

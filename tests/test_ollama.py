@@ -159,7 +159,7 @@ def test_ollama_matchmaker_success(
     mock_post.return_value = mock_response
 
     service = MatchmakerService()
-    evaluation = service._call_model_with_retries(client=None, prompt="some prompt")
+    evaluation = service._call_model_with_retries(prompt="some prompt")
 
     assert isinstance(evaluation, MatchEvaluation)
     assert evaluation.confidence == 0.85

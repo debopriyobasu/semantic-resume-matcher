@@ -65,40 +65,50 @@ def test_extract_text_corrupt_pdf(parser):
             parser.extract_text(b"not a pdf")
 
 
-def test_extract_profile_happy_path(parser):
-    with patch("src.services.resume_parser.genai.Client") as MockClient:
-        mock_client = MockClient.return_value
-        mock_response = MagicMock()
-        mock_response.text = '{"name": "John Doe", "email": "john@example.com", "skills": ["Python"], "experience_years": 5, "education": "BSc", "location": "Remote"}'
-        mock_client.models.generate_content.return_value = mock_response
+@patch("httpx.post")
+def test_extract_profile_happy_path(mock_post, parser):
+    mock_response = MagicMock()
+    mock_response.status_code = 200
+    mock_response.json.return_value = {
+        "message": {
+            "content": '{"name": "John Doe", "email": "john@example.com", "skills": ["Python"], "experience_years": 5, "education": "BSc", "location": "Remote"}'
+        }
+    }
+    mock_post.return_value = mock_response
 
-        profile = parser.extract_profile("fake resume text")
+    profile = parser.extract_profile("fake resume text")
 
-        assert profile.name == "John Doe"
-        assert profile.email == "john@example.com"
-        assert profile.skills == ["Python"]
-        assert profile.experience_years == 5
-
-
-def test_extract_profile_validation_failure(parser):
-    with patch("src.services.resume_parser.genai.Client") as MockClient:
-        mock_client = MockClient.return_value
-        mock_response = MagicMock()
-        # Missing skills which is a required list field, though it has default_factory it might just use it.
-        # Let's send an invalid type for experience_years
-        mock_response.text = '{"name": {"first": "John"}, "experience_years": 5}'
-        mock_client.models.generate_content.return_value = mock_response
-
-        with pytest.raises(ResumeParseError, match="Failed to validate extracted profile"):
-            parser.extract_profile("fake text")
+    assert profile.name == "John Doe"
+    assert profile.email == "john@example.com"
+    assert profile.skills == ["Python"]
+    assert profile.experience_years == 5
 
 
-def test_extract_profile_empty_response(parser):
-    with patch("src.services.resume_parser.genai.Client") as MockClient:
-        mock_client = MockClient.return_value
-        mock_response = MagicMock()
-        mock_response.text = ""
-        mock_client.models.generate_content.return_value = mock_response
+@patch("httpx.post")
+def test_extract_profile_validation_failure(mock_post, parser):
+    mock_response = MagicMock()
+    mock_response.status_code = 200
+    mock_response.json.return_value = {
+        "message": {
+            "content": '{"name": {"first": "John"}, "experience_years": 5}'
+        }
+    }
+    mock_post.return_value = mock_response
 
-        with pytest.raises(ResumeParseError, match="Received empty response from Gemini"):
-            parser.extract_profile("fake text")
+    with pytest.raises(ResumeParseError, match="Failed to validate extracted profile"):
+        parser.extract_profile("fake text")
+
+
+@patch("httpx.post")
+def test_extract_profile_empty_response(mock_post, parser):
+    mock_response = MagicMock()
+    mock_response.status_code = 200
+    mock_response.json.return_value = {
+        "message": {
+            "content": ""
+        }
+    }
+    mock_post.return_value = mock_response
+
+    with pytest.raises(ResumeParseError, match="Failed to parse model response as JSON"):
+        parser.extract_profile("fake text")

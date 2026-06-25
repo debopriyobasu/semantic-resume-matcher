@@ -1,4 +1,4 @@
-# Semantic Resume Matcher (Offline-First)
+# Semantic Resume Matcher (Offline)
 
 [![Python 3.11+](https://img.shields.io/badge/Python-3.11+-3776AB?style=flat-square&logo=python&logoColor=white)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-009688?style=flat-square&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
@@ -6,7 +6,7 @@
 [![Ollama](https://img.shields.io/badge/Ollama-Offline--LLM-black?style=flat-square)](https://ollama.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
 
-An enterprise-grade, **completely local and offline-first** resume-to-job matching system. Built using **FastAPI, PostgreSQL, pgvector, and Ollama**, this application automates the recruitment pipeline—parsing resumes, searching semantically, and running fit assessments—whilst guaranteeing absolute data privacy by executing entirely on your local machine.
+An enterprise-grade, **completely local and offline** resume-to-job matching system. Built using **FastAPI, PostgreSQL, pgvector, and Ollama**, this application automates the recruitment pipeline—parsing resumes, searching semantically, and running fit assessments—whilst guaranteeing absolute data privacy by executing entirely on your local machine.
 
 ---
 

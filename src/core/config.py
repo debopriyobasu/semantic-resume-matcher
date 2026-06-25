@@ -10,7 +10,6 @@ class Settings(BaseSettings):
         default="postgresql+psycopg://resume_matcher:resume_matcher@localhost:5432/resume_matcher",
         alias="DATABASE_URL",
     )
-    google_api_key: str = Field(default="", alias="GOOGLE_API_KEY")
     prompt_dir: str = Field(default="prompts", alias="PROMPT_DIR")
 
     use_ollama: bool = Field(default=True, alias="USE_OLLAMA")

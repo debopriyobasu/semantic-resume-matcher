@@ -100,9 +100,9 @@ def get_golden_cases():
 @pytest.mark.parametrize("case_prefix", get_golden_cases())
 @patch("src.services.resume_parser.PdfReader")
 @patch("src.services.search_service.search_repository.find_similar_jobs")
-@patch("google.genai.Client")
+@patch("httpx.post")
 def test_golden_regression_cases(
-    MockGenaiClient, mock_find_similar_jobs, mock_pdf_reader, case_prefix
+    mock_post, mock_find_similar_jobs, mock_pdf_reader, case_prefix
 ):
     # Load case files
     resume_path = os.path.join(GOLDEN_DIR, f"{case_prefix}_resume.txt")
@@ -161,23 +161,34 @@ def test_golden_regression_cases(
     mock_page.extract_text.return_value = resume_text
     mock_pdf_reader.return_value.pages = [mock_page]
 
-    # Mock Gemini behavior dynamically
-    mock_client_instance = MockGenaiClient.return_value
-
-    def mock_genai_generate_content(model, contents, **kwargs):
+    # Mock Ollama behavior dynamically
+    def mock_httpx_post(url, **kwargs):
         mock_response = MagicMock()
-        contents_str = str(contents)
-        if "strong fit" in contents_str or "Evaluation criteria" in contents_str:
-            mock_response.text = json.dumps(expected_data["mock_gemini_match"])
-        else:
-            mock_response.text = json.dumps(expected_data["mock_gemini_profile"])
+        mock_response.status_code = 200
+        url_str = str(url)
+        if "embeddings" in url_str:
+            mock_response.json.return_value = {"embedding": [0.1] * 768}
+        elif "chat" in url_str:
+            json_data = kwargs.get("json", {})
+            messages = json_data.get("messages", [])
+            prompt_content = ""
+            if messages:
+                prompt_content = messages[-1].get("content", "")
+            if "strong fit" in prompt_content or "Evaluation criteria" in prompt_content:
+                mock_response.json.return_value = {
+                    "message": {
+                        "content": json.dumps(expected_data["mock_gemini_match"])
+                    }
+                }
+            else:
+                mock_response.json.return_value = {
+                    "message": {
+                        "content": json.dumps(expected_data["mock_gemini_profile"])
+                    }
+                }
         return mock_response
 
-    mock_client_instance.models.generate_content.side_effect = mock_genai_generate_content
-
-    mock_embed_response = MagicMock()
-    mock_embed_response.embeddings = [MagicMock(values=[0.1] * 768)]
-    mock_client_instance.models.embed_content.return_value = mock_embed_response
+    mock_post.side_effect = mock_httpx_post
 
     # Mock pgvector search retrieval
     mock_find_similar_jobs.return_value = [(job, 0.90)]

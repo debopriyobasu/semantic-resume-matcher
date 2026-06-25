@@ -40,8 +40,7 @@ def parse_optional_int(value: str) -> int | None:
         return int(stripped)
     except ValueError as e:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Invalid integer value: '{value}'"
+            status_code=status.HTTP_400_BAD_REQUEST, detail=f"Invalid integer value: '{value}'"
         ) from e
 
 
@@ -69,23 +68,18 @@ async def upload_jobs(
 
     if not file.filename or not file.filename.lower().endswith(".csv"):
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Only CSV files are allowed"
+            status_code=status.HTTP_400_BAD_REQUEST, detail="Only CSV files are allowed"
         )
 
     content_bytes = await file.read()
     if not content_bytes:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="CSV file is empty"
-        )
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="CSV file is empty")
 
     try:
         csv_content = content_bytes.decode("utf-8")
     except UnicodeDecodeError as e:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="CSV file encoding must be UTF-8"
+            status_code=status.HTTP_400_BAD_REQUEST, detail="CSV file encoding must be UTF-8"
         ) from e
 
     reader = csv.DictReader(io.StringIO(csv_content))
@@ -104,7 +98,7 @@ async def upload_jobs(
     if not reader.fieldnames or not expected_cols.issubset(set(reader.fieldnames)):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"CSV must contain headers: {', '.join(expected_cols)}"
+            detail=f"CSV must contain headers: {', '.join(expected_cols)}",
         )
 
     parsed_rows: list[dict[str, Any]] = []
@@ -116,7 +110,7 @@ async def upload_jobs(
         if not title or not company or not description:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail=f"Row {idx} is invalid: title, company, and description are required and cannot be empty"
+                detail=f"Row {idx} is invalid: title, company, and description are required and cannot be empty",
             )
 
         parsed_rows.append(
@@ -139,8 +133,7 @@ async def upload_jobs(
 
     if not parsed_rows:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="CSV file contains no job records"
+            status_code=status.HTTP_400_BAD_REQUEST, detail="CSV file contains no job records"
         )
 
     added_count = 0
@@ -159,8 +152,7 @@ async def upload_jobs(
         # update mode
         existing_jobs = db.scalars(select(JobPosting)).all()
         existing_jobs_dict = {
-            (job.title.strip().lower(), job.company.strip().lower()): job
-            for job in existing_jobs
+            (job.title.strip().lower(), job.company.strip().lower()): job for job in existing_jobs
         }
 
         for row_data in parsed_rows:
@@ -193,7 +185,9 @@ async def upload_jobs(
 
                 if changed:
                     # Remove existing embedding to trigger regeneration
-                    db.query(JobEmbedding).filter(JobEmbedding.job_id == existing_job.job_id).delete()
+                    db.query(JobEmbedding).filter(
+                        JobEmbedding.job_id == existing_job.job_id
+                    ).delete()
                     updated_count += 1
             else:
                 new_job = JobPosting(job_id=uuid.uuid4(), **row_data)
@@ -203,9 +197,13 @@ async def upload_jobs(
         db.commit()
 
     # Determine embedding status
-    stmt = select(func.count(JobPosting.job_id)).outerjoin(JobEmbedding).where(JobEmbedding.embedding_id.is_(None))
+    stmt = (
+        select(func.count(JobPosting.job_id))
+        .outerjoin(JobEmbedding)
+        .where(JobEmbedding.embedding_id.is_(None))
+    )
     jobs_without_emb = db.scalar(stmt) or 0
-    embedding_completed = (jobs_without_emb == 0)
+    embedding_completed = jobs_without_emb == 0
 
     if jobs_without_emb > 0:
         logger.info("Spawning background task to generate embeddings for %d jobs", jobs_without_emb)
@@ -229,7 +227,11 @@ def get_embedding_status(db: Session = Depends(get_db)) -> JobEmbeddingStatusRes
     Returns the completion status, total number of jobs, and the count of jobs that are currently missing vector embeddings.
     """
     total_jobs = db.scalar(select(func.count(JobPosting.job_id))) or 0
-    stmt = select(func.count(JobPosting.job_id)).outerjoin(JobEmbedding).where(JobEmbedding.embedding_id.is_(None))
+    stmt = (
+        select(func.count(JobPosting.job_id))
+        .outerjoin(JobEmbedding)
+        .where(JobEmbedding.embedding_id.is_(None))
+    )
     jobs_without_emb = db.scalar(stmt) or 0
 
     return JobEmbeddingStatusResponse(
