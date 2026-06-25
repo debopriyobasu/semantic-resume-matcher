@@ -29,6 +29,17 @@ async def upload_resume(
     preferred_remote: bool | None = Form(None),
     db: Session = Depends(get_db),
 ) -> UploadResumeResponse:
+    """
+    Upload a candidate's resume (PDF format) along with optional filtering criteria.
+
+    Launches an asynchronous background pipeline that:
+    1. Parses the PDF resume content using local LLM extraction.
+    2. Stores the candidate profile and preferences in the database.
+    3. Generates high-density vector embeddings of the profile.
+    4. Evaluates the candidate against all active job postings to generate semantic matches.
+
+    **Note:** Only PDF files up to 10MB are supported.
+    """
     logger.info("Upload request received")
 
     if file.content_type not in ALLOWED_MIME_TYPES:

@@ -295,7 +295,12 @@ This bootstrap script:
 ## Managing the Job Dataset
 
 ### Job Dataset Format
-The application expects job listings to be seeded from a CSV file located at `seed_data/jobs.csv`. The CSV requires the following columns:
+To quickly create your own job listings dataset, you can use the template file provided at [jobs_template.csv](file:///Users/debopriyobasu/Documents/githubprojects/project_x/semantic-resume-matcher/seed_data/jobs_template.csv) as a starting point.
+
+* **Seeding offline / via CLI**: The CLI seed and bootstrap scripts default to importing from `seed_data/jobs.csv`. If you are using this method, save your filled template there.
+* **Seeding via REST API**: You can upload a CSV file with *any filename* using the `POST /jobs/upload` endpoint.
+
+Regardless of the method or filename used, the CSV must contain the following columns:
 * **`title`**: Job title (string, e.g., `Associate Backend Engineer`)
 * **`company`**: Company name (string, e.g., `Northstar Labs`)
 * **`location`**: Job location (string, e.g., `San Francisco, CA` or empty)

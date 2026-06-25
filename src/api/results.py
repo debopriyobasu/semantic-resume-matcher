@@ -18,6 +18,12 @@ router = APIRouter(prefix="/candidate", tags=["results"])
 
 @router.get("/{candidate_id}", response_model=CandidateStatusResponse)
 def get_candidate_status(candidate_id: uuid.UUID, db: Session = Depends(get_db)):
+    """
+    Retrieve the pipeline execution status of a candidate.
+
+    Allows clients to poll the processing state (e.g. PENDING, PROCESSING, COMPLETE, FAILED)
+    of a candidate's resume upload.
+    """
     candidate = db.scalar(select(Candidate).where(Candidate.candidate_id == candidate_id))
     if not candidate:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Candidate not found")
@@ -31,6 +37,12 @@ def get_candidate_status(candidate_id: uuid.UUID, db: Session = Depends(get_db))
 
 @router.get("/{candidate_id}/matches", response_model=MatchResultsResponse)
 def get_match_results(candidate_id: uuid.UUID, db: Session = Depends(get_db)):
+    """
+    Retrieve semantic and deterministic match results for a candidate.
+
+    Returns job matches sorted by overall confidence and semantic similarity score.
+    Includes fit reasoning, strengths, and missing candidate skill gaps.
+    """
     candidate = db.scalar(select(Candidate).where(Candidate.candidate_id == candidate_id))
     if not candidate:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Candidate not found")

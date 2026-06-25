@@ -1,0 +1,3 @@
+title,company,location,remote_ok,visa_sponsorship,min_salary,max_salary,required_skills,description
+Associate Backend Engineer,Northstar Labs,"San Francisco, CA",true,true,120000,160000,Python;FastAPI;SQLAlchemy;PostgreSQL,"We are looking for an Associate Backend Engineer to build reliable product features, collaborate with cross-functional teams, and improve systems used by customers."
+Frontend Developer,Design Studio,,false,false,,,React;TypeScript;CSS,"A brief description of the job goes here."

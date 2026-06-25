@@ -1,0 +1,718 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Semantic Resume Matcher",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": [
+          "health"
+        ],
+        "summary": "Health",
+        "description": "Check the health status of the application.\n\nReturns a simple JSON response indicating that the service is running and\nable to accept requests.",
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/upload-resume": {
+      "post": {
+        "tags": [
+          "upload"
+        ],
+        "summary": "Upload Resume",
+        "description": "Upload a candidate's resume (PDF format) along with optional filtering criteria.\n\nLaunches an asynchronous background pipeline that:\n1. Parses the PDF resume content using local LLM extraction.\n2. Stores the candidate profile and preferences in the database.\n3. Generates high-density vector embeddings of the profile.\n4. Evaluates the candidate against all active job postings to generate semantic matches.\n\n**Note:** Only PDF files up to 10MB are supported.",
+        "operationId": "upload_resume_upload_resume_post",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_upload_resume_upload_resume_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadResumeResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/candidate/{candidate_id}": {
+      "get": {
+        "tags": [
+          "results"
+        ],
+        "summary": "Get Candidate Status",
+        "description": "Retrieve the pipeline execution status of a candidate.\n\nAllows clients to poll the processing state (e.g. PENDING, PROCESSING, COMPLETE, FAILED)\nof a candidate's resume upload.",
+        "operationId": "get_candidate_status_candidate__candidate_id__get",
+        "parameters": [
+          {
+            "name": "candidate_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Candidate Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CandidateStatusResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/candidate/{candidate_id}/matches": {
+      "get": {
+        "tags": [
+          "results"
+        ],
+        "summary": "Get Match Results",
+        "description": "Retrieve semantic and deterministic match results for a candidate.\n\nReturns job matches sorted by overall confidence and semantic similarity score.\nIncludes fit reasoning, strengths, and missing candidate skill gaps.",
+        "operationId": "get_match_results_candidate__candidate_id__matches_get",
+        "parameters": [
+          {
+            "name": "candidate_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Candidate Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MatchResultsResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/metrics": {
+      "get": {
+        "tags": [
+          "metrics"
+        ],
+        "summary": "Get Metrics",
+        "description": "Retrieve application metrics.",
+        "operationId": "get_metrics_metrics_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Get Metrics Metrics Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/jobs/upload": {
+      "post": {
+        "tags": [
+          "jobs"
+        ],
+        "summary": "Upload Jobs",
+        "description": "Upload a CSV file containing job listings to the database.\n\nSupports two modes of operation:\n- **update** (default): Adds new job listings and updates existing ones (based on matching Title and Company).\n  If an existing job listing is modified, its corresponding embedding is removed and regenerated.\n- **replace**: Deletes all existing job listings and starts fresh with the uploaded dataset.\n\nTriggers an asynchronous background task to generate vector embeddings for any newly added or updated job postings.\n\n**Note:** Only CSV files are allowed. The CSV must contain the following columns:\n`title`, `company`, `location`, `remote_ok`, `visa_sponsorship`, `min_salary`, `max_salary`, `required_skills`, `description`.",
+        "operationId": "upload_jobs_jobs_upload_post",
+        "parameters": [
+          {
+            "name": "mode",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "update",
+                "replace"
+              ],
+              "default": "update",
+              "title": "Mode"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_upload_jobs_jobs_upload_post"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobUploadResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/jobs/embedding-status": {
+      "get": {
+        "tags": [
+          "jobs"
+        ],
+        "summary": "Get Embedding Status",
+        "description": "Retrieve the current status of job embedding generation.\n\nReturns the completion status, total number of jobs, and the count of jobs that are currently missing vector embeddings.",
+        "operationId": "get_embedding_status_jobs_embedding_status_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobEmbeddingStatusResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/jobs": {
+      "delete": {
+        "tags": [
+          "jobs"
+        ],
+        "summary": "Delete Jobs Dataset",
+        "description": "Delete all job postings and associated vector embeddings from the database.\n\nClears the entire jobs catalog. Due to cascade deletes, all candidate match results associated with these jobs are also deleted.",
+        "operationId": "delete_jobs_dataset_jobs_delete",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobDeleteResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Body_upload_jobs_jobs_upload_post": {
+        "properties": {
+          "file": {
+            "type": "string",
+            "contentMediaType": "application/octet-stream",
+            "title": "File"
+          }
+        },
+        "type": "object",
+        "required": [
+          "file"
+        ],
+        "title": "Body_upload_jobs_jobs_upload_post"
+      },
+      "Body_upload_resume_upload_resume_post": {
+        "properties": {
+          "file": {
+            "type": "string",
+            "contentMediaType": "application/octet-stream",
+            "title": "File"
+          },
+          "desired_salary": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Desired Salary"
+          },
+          "visa_required": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Visa Required"
+          },
+          "preferred_location": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Preferred Location"
+          },
+          "preferred_remote": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Preferred Remote"
+          }
+        },
+        "type": "object",
+        "required": [
+          "file"
+        ],
+        "title": "Body_upload_resume_upload_resume_post"
+      },
+      "CandidateStatusResponse": {
+        "properties": {
+          "candidate_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Candidate Id"
+          },
+          "pipeline_status": {
+            "type": "string",
+            "title": "Pipeline Status"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          }
+        },
+        "type": "object",
+        "required": [
+          "candidate_id",
+          "pipeline_status",
+          "status"
+        ],
+        "title": "CandidateStatusResponse"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "HealthResponse": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status"
+        ],
+        "title": "HealthResponse"
+      },
+      "JobDeleteResponse": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "description": "The status of the delete operation (typically 'success')"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message",
+            "description": "A descriptive message indicating the result of the delete operation"
+          },
+          "deleted_count": {
+            "type": "integer",
+            "title": "Deleted Count",
+            "description": "The number of job postings deleted from the database"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status",
+          "message",
+          "deleted_count"
+        ],
+        "title": "JobDeleteResponse"
+      },
+      "JobEmbeddingStatusResponse": {
+        "properties": {
+          "embedding_completed": {
+            "type": "boolean",
+            "title": "Embedding Completed",
+            "description": "True if all job postings have corresponding vector embeddings"
+          },
+          "total_jobs": {
+            "type": "integer",
+            "title": "Total Jobs",
+            "description": "The total number of job postings in the database"
+          },
+          "jobs_without_embeddings": {
+            "type": "integer",
+            "title": "Jobs Without Embeddings",
+            "description": "The number of job postings currently missing vector embeddings"
+          }
+        },
+        "type": "object",
+        "required": [
+          "embedding_completed",
+          "total_jobs",
+          "jobs_without_embeddings"
+        ],
+        "title": "JobEmbeddingStatusResponse"
+      },
+      "JobUploadResponse": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "description": "The status of the upload operation (typically 'success')"
+          },
+          "mode": {
+            "type": "string",
+            "title": "Mode",
+            "description": "The dataset update mode used: 'update' or 'replace'"
+          },
+          "added_count": {
+            "type": "integer",
+            "title": "Added Count",
+            "description": "The number of new job postings added to the database"
+          },
+          "updated_count": {
+            "type": "integer",
+            "title": "Updated Count",
+            "description": "The number of existing job postings updated in the database"
+          },
+          "deleted_count": {
+            "type": "integer",
+            "title": "Deleted Count",
+            "description": "The number of job postings deleted (applicable in 'replace' mode)"
+          },
+          "embedding_completed": {
+            "type": "boolean",
+            "title": "Embedding Completed",
+            "description": "Whether embedding generation is already complete for the uploaded jobs"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status",
+          "mode",
+          "added_count",
+          "updated_count",
+          "deleted_count",
+          "embedding_completed"
+        ],
+        "title": "JobUploadResponse"
+      },
+      "MatchJobResponse": {
+        "properties": {
+          "job_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Job Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "company": {
+            "type": "string",
+            "title": "Company"
+          },
+          "location": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Location"
+          },
+          "remote_ok": {
+            "type": "boolean",
+            "title": "Remote Ok"
+          },
+          "min_salary": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Min Salary"
+          },
+          "max_salary": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Salary"
+          }
+        },
+        "type": "object",
+        "required": [
+          "job_id",
+          "title",
+          "company",
+          "remote_ok"
+        ],
+        "title": "MatchJobResponse"
+      },
+      "MatchResultItem": {
+        "properties": {
+          "match_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Match Id"
+          },
+          "job": {
+            "$ref": "#/components/schemas/MatchJobResponse"
+          },
+          "vector_score": {
+            "type": "number",
+            "title": "Vector Score"
+          },
+          "confidence": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Confidence"
+          },
+          "match_category": {
+            "type": "string",
+            "title": "Match Category"
+          },
+          "reasoning": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reasoning"
+          },
+          "skill_gaps": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Skill Gaps"
+          },
+          "standout_strengths": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Standout Strengths"
+          }
+        },
+        "type": "object",
+        "required": [
+          "match_id",
+          "job",
+          "vector_score",
+          "match_category",
+          "skill_gaps",
+          "standout_strengths"
+        ],
+        "title": "MatchResultItem"
+      },
+      "MatchResultsResponse": {
+        "properties": {
+          "candidate_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Candidate Id"
+          },
+          "matches": {
+            "items": {
+              "$ref": "#/components/schemas/MatchResultItem"
+            },
+            "type": "array",
+            "title": "Matches"
+          }
+        },
+        "type": "object",
+        "required": [
+          "candidate_id",
+          "matches"
+        ],
+        "title": "MatchResultsResponse"
+      },
+      "UploadResumeResponse": {
+        "properties": {
+          "candidate_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Candidate Id"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          }
+        },
+        "type": "object",
+        "required": [
+          "candidate_id",
+          "status"
+        ],
+        "title": "UploadResumeResponse"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  }
+}
