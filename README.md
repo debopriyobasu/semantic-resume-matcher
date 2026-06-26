@@ -1,12 +1,13 @@
 # Semantic Resume Matcher (Offline)
 
 [![Python 3.11+](https://img.shields.io/badge/Python-3.11+-3776AB?style=flat-square&logo=python&logoColor=white)](https://www.python.org/)
+[![React](https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react&logoColor=white)](https://react.dev/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-009688?style=flat-square&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-336791?style=flat-square&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
 [![Ollama](https://img.shields.io/badge/Ollama-Offline--LLM-black?style=flat-square)](https://ollama.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](https://opensource.org/licenses/MIT)
 
-An enterprise-grade, **completely local and offline** resume-to-job matching system. Built using **FastAPI, PostgreSQL, pgvector, and Ollama**, this application automates the recruitment pipeline—parsing resumes, searching semantically, and running fit assessments—whilst guaranteeing absolute data privacy by executing entirely on your local machine.
+An enterprise-grade, **completely local and offline** resume-to-job matching system. Built using a modern **React + Vite web dashboard** and a robust **FastAPI, PostgreSQL, pgvector, and Ollama** backend, this application automates the recruitment pipeline—parsing resumes, searching semantically, and running fit assessments—whilst guaranteeing absolute data privacy by executing entirely on your local machine.
 
 ---
 
@@ -43,6 +44,12 @@ Modern candidate screening pipelines face major operational hurdles:
 * **Standout Strengths**: Automatically highlights candidate qualifications that align perfectly with the role.
 * **Skill Gap Identification**: Detects missing requirements to help recruiters prepare for follow-up screening interviews.
 
+### 5. Interactive Web Dashboard UI
+* **Real-time Telemetry Dashboard**: Monitors database connectivity, system health metrics, total active job postings, and vector embedding progress. Shows interactive charts (parsing status, match categories, and confidence distribution).
+* **Self-Service Candidate Parsing**: Seamless form to upload resumes, configure desired filters (salary bounds, remote/hybrid status, and sponsorship needs), and track parsing completion.
+* **Explainable Matching Panel**: Side-by-side visualization of parsed profile metadata and ranked job postings, complete with circular match scores, standalone strengths, and skill gaps.
+* **Job Dataset Operations**: Dedicated controls to upload fresh CSV catalogs, append updates, clean database states, and observe embedding calculations in real-time.
+
 ---
 
 ## System Architecture
@@ -72,6 +79,7 @@ Our multi-stage pipeline combines the raw speed of database-level vector indexin
 
 | Layer | Technology | Rationale & Rationale Details |
 | :--- | :--- | :--- |
+| **Frontend UI** | React + Vite | Modern, premium configuration-driven responsive dashboard featuring SVG charting components, progress rings, and real-time polling telemetry. |
 | **API Framework** | FastAPI | Asynchronous performance, request/response validation using Pydantic, and automatic Swagger UI. |
 | **Database** | PostgreSQL 15 | Time-tested relational database ensuring transactional ACID guarantees. |
 | **Vector Indexing** | pgvector | Cosine similarity vector search directly inside SQL queries. |
@@ -85,11 +93,11 @@ Our multi-stage pipeline combines the raw speed of database-level vector indexin
 
 ## Project Structure
 
-The project directory follows a domain-driven architectural layout designed for maintainability and scalability:
+The project directory follows a domain-driven architectural layout designed for maintainability and scalability, separating the Python API server and the React frontend dashboard:
 
 ```text
 semantic-resume-matcher/
-├── src/
+├── src/                 # Backend API source files
 │   ├── api/             # HTTP Controllers, routers, and request tracking middleware
 │   ├── core/            # App configuration (Pydantic Settings), logger setup, and globals
 │   ├── db/              # Database session engine and base models
@@ -97,6 +105,16 @@ semantic-resume-matcher/
 │   ├── repositories/    # Clean Data Access Object (DAO) layer decoupling database logic
 │   ├── schemas/         # Pydantic validation schemas for API inputs/outputs
 │   └── services/        # Core orchestrators: PDF parsers, LLM prompts, & vector matches
+├── frontend/            # React + Vite web dashboard application
+│   ├── src/
+│   │   ├── components/  # Reusable layout and custom visual widget components (Donut/Bar charts, etc.)
+│   │   ├── config/      # Configuration-driven settings for dashboard layout & API endpoints
+│   │   ├── hooks/       # Custom React state/effect hooks (e.g. status polling telemetry)
+│   │   ├── pages/       # Dashboard, Resume Upload, Fit Results, and Job Dataset Manager pages
+│   │   ├── App.jsx      # Core routing and root layout component
+│   │   └── index.css    # Premium design system styling (dark mode, glassmorphism, animations)
+│   ├── Dockerfile       # Node-slim container build configuration for Vite dev server
+│   └── package.json     # Node.js dependencies and run scripts
 ├── prompts/             # Modular system instructions (resume parser, matchmaker criteria)
 ├── scripts/             # Data bootstrapping, CSV importers, and batch embedders
 ├── tests/               # Pytest directories (unit, integration, and golden dataset regressions)
@@ -231,64 +249,109 @@ Delete all job listings and their associated vector embeddings from the database
 
 ## Local Development & Installation
 
-### Prerequisites
-* [Docker](https://www.docker.com/) & [Docker Compose](https://docs.docker.com/compose/)
-* [Ollama](https://ollama.com/) running locally on the host machine.
+The application can be started using either **Docker Compose** (recommended for a quick, single-command launch) or run **natively on your local machine** (ideal for active development of the backend/frontend).
 
-### Model Setup
-Pull the required local models before starting the application:
+### Prerequisites
+* [Ollama](https://ollama.com/) running locally on the host machine.
+* For Docker Compose: [Docker](https://www.docker.com/) & [Docker Compose](https://docs.docker.com/compose/)
+* For Native Setup: [Node.js v20+](https://nodejs.org/), [Python 3.11+](https://www.python.org/), and a running [PostgreSQL 15](https://www.postgresql.org/) database with the `pgvector` extension enabled.
+
+### Local Model Setup
+Pull the required local models via Ollama before starting the application:
 ```bash
 ollama pull gemma3:1b            # Recommended local LLM (or llama3.2)
 ollama pull nomic-embed-text    # Required embedding model
 ```
 
-### Environment Configuration
-1. Clone this repository and copy the environment template:
-   ```bash
-   cp .env.example .env
-   ```
-2. Verify the configuration values in `.env`:
-   ```env
-   DATABASE_URL=postgresql+psycopg://resume_matcher:resume_matcher@postgres:5432/resume_matcher
-   USE_OLLAMA=true
-   OLLAMA_BASE_URL=http://host.docker.internal:11434
-   OLLAMA_LLM_MODEL=gemma3:1b
-   OLLAMA_EMBED_MODEL=nomic-embed-text
-   ```
+---
 
-### Start the Platform
-Boot the database and FastAPI server using Docker Compose:
+### Option A: Docker Compose (All-in-One Bootup - Recommended)
+
+This is the fastest way to boot the database, the FastAPI backend, and the React frontend all at once.
+
+#### 1. Environment Configuration
+Copy the environment template:
+```bash
+cp .env.example .env
+```
+Verify the default settings in `.env`. The default settings are preconfigured to connect to the internal container database (`postgres`) and resolve the host's Ollama instance via `http://host.docker.internal:11434`.
+
+#### 2. Start all services
+Run Docker Compose in detached mode:
 ```bash
 docker compose up -d
 ```
+This builds and starts:
+* **PostgreSQL + pgvector** (port `5432`)
+* **FastAPI Backend API** (port `8000`)
+* **React Web Frontend** (port `5173`)
 
-### Stop the Platform (Retaining Data)
-To stop the application containers without deleting the database or losing your saved candidate profiles and job embeddings:
+#### 3. Database Seeding & Bootstrapping
+With the services running, execute the bootstrap script inside the backend container to apply migrations, import seed job profiles, and auto-generate vector embeddings:
+```bash
+docker compose exec api python scripts/bootstrap.py
+```
+
+#### 4. Access the Application
+* **Web Dashboard**: Open [http://localhost:5173](http://localhost:5173) in your browser.
+* **Interactive API Documentation (Swagger)**: Open [http://localhost:8000/docs](http://localhost:8000/docs).
+
+#### 5. Stop the Platform (Retaining Data)
+To shut down the containers while preserving your local database volume (resumes, job listings, and vector embeddings):
 ```bash
 docker compose down
 ```
-
 > [!IMPORTANT]
-> Standard `docker compose down` preserves the local named volume (`postgres_data`). All your seed data, resumes, matches, and vector embeddings will be retained and automatically loaded the next time you run `docker compose up -d`.
->
-> Avoid using the `-v` or `--volumes` flag (e.g., `docker compose down -v`), as that will delete the named volume and permanently destroy all database content.
+> Standard `docker compose down` preserves the `postgres_data` volume. Avoid using the `-v` or `--volumes` flag, as that will delete the database contents.
 
-### Database Seeding & Bootstrapping
-Run migrations, seed the database with available job postings, and compute job vector embeddings using a single command:
+---
 
-* **If running Python on your host system:**
-  ```bash
-  python scripts/bootstrap.py
-  ```
-* **If running through Docker containers:**
-  ```bash
-  docker compose exec api python scripts/bootstrap.py
-  ```
+### Option B: Local Native Setup (For Development)
 
-This bootstrap script:
-1. Executes database migrations via Alembic.
-2. Imports the job catalog from `seed_data/jobs.csv`.
-3. Auto-generates vector embeddings for all job descriptions using Ollama.
+If you are actively modifying the code, running the backend and frontend servers locally allows for hot-reloading (HMR).
+
+#### 1. Database Setup
+Ensure PostgreSQL is running locally, create a database named `resume_matcher`, and ensure the `pgvector` extension is enabled:
+```sql
+CREATE DATABASE resume_matcher;
+\c resume_matcher;
+CREATE EXTENSION IF NOT EXISTS vector;
+```
+
+#### 2. Backend Environment & Setup
+1. Copy `.env.example` to `.env` and adjust database credentials and host URLs (e.g., set `DATABASE_URL` to point to your local PostgreSQL server and `OLLAMA_BASE_URL` to `http://localhost:11434`).
+2. Create and activate a Python virtual environment:
+   ```bash
+   python3 -m venv .venv
+   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+   ```
+3. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+4. Run migrations, seed, and embed jobs:
+   ```bash
+   python scripts/bootstrap.py
+   ```
+5. Start the backend API development server:
+   ```bash
+   uvicorn src.main:app --reload --port 8000
+   ```
+
+#### 3. Frontend Setup
+1. Navigate to the frontend directory:
+   ```bash
+   cd frontend
+   ```
+2. Install npm dependencies:
+   ```bash
+   npm install
+   ```
+3. Start the Vite development server:
+   ```bash
+   npm run dev
+   ```
+   The frontend will be available at [http://localhost:5173](http://localhost:5173). It is preconfigured to connect to the local backend API running at `http://localhost:8000`.
 
 ---
 

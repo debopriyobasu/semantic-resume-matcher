@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session, joinedload
 from src.db.session import get_db
 from src.models.candidate import Candidate
 from src.models.match_result import MatchResult
+from src.schemas.candidate import CandidateProfile
 from src.schemas.results import (
     CandidateStatusResponse,
     MatchResultItem,
@@ -28,10 +29,22 @@ def get_candidate_status(candidate_id: uuid.UUID, db: Session = Depends(get_db))
     if not candidate:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Candidate not found")
 
+    profile = None
+    if candidate.pipeline_status == "COMPLETE":
+        profile = CandidateProfile(
+            name=candidate.name,
+            email=candidate.email,
+            skills=candidate.skills or [],
+            experience_years=candidate.experience_years,
+            education=candidate.education,
+            location=candidate.location,
+        )
+
     return CandidateStatusResponse(
         candidate_id=candidate.candidate_id,
         status=candidate.pipeline_status,
         pipeline_status=candidate.pipeline_status,
+        profile=profile,
     )
 
 

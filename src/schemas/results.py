@@ -2,11 +2,14 @@ import uuid
 
 from pydantic import BaseModel, ConfigDict
 
+from src.schemas.candidate import CandidateProfile
+
 
 class CandidateStatusResponse(BaseModel):
     candidate_id: uuid.UUID
     pipeline_status: str
     status: str
+    profile: CandidateProfile | None = None
 
 
 class MatchJobResponse(BaseModel):
