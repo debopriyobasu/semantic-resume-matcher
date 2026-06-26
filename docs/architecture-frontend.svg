@@ -1,0 +1,254 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 820" width="100%" height="100%">
+  <defs>
+    <filter id="shadow" x="-5%" y="-5%" width="115%" height="115%">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#000000" flood-opacity="0.08"/>
+    </filter>
+    <filter id="shadow-strong" x="-8%" y="-8%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.12"/>
+    </filter>
+
+    <!-- Gradients for containers -->
+    <linearGradient id="grad-root" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F8F7FF"/>
+      <stop offset="100%" stop-color="#EDE9FE"/>
+    </linearGradient>
+    <linearGradient id="grad-pages" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#EFF6FF"/>
+      <stop offset="100%" stop-color="#DBEAFE"/>
+    </linearGradient>
+    <linearGradient id="grad-components" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F0FDF4"/>
+      <stop offset="100%" stop-color="#DCFCE7"/>
+    </linearGradient>
+    <linearGradient id="grad-hooks" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFF7ED"/>
+      <stop offset="100%" stop-color="#FFEDD5"/>
+    </linearGradient>
+    <linearGradient id="grad-config" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FDF4FF"/>
+      <stop offset="100%" stop-color="#FAE8FF"/>
+    </linearGradient>
+    <linearGradient id="grad-api" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F0F9FF"/>
+      <stop offset="100%" stop-color="#BAE6FD"/>
+    </linearGradient>
+
+    <!-- Arrows -->
+    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#4B5563"/>
+    </marker>
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#2563EB"/>
+    </marker>
+    <marker id="arrow-green" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#16A34A"/>
+    </marker>
+    <marker id="arrow-orange" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#EA580C"/>
+    </marker>
+    <marker id="arrow-violet" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+      <path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#7C3AED"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1100" height="820" fill="#FAFBFC" rx="10"/>
+
+  <!-- Title -->
+  <text x="550" y="36" text-anchor="middle" font-family="system-ui,sans-serif" font-size="20" font-weight="bold" fill="#1E1B4B">Frontend Architecture — React SPA (Vite)</text>
+  <line x1="80" y1="48" x2="1020" y2="48" stroke="#C7D2FE" stroke-width="1.5"/>
+
+  <!-- ========= ENTRY POINT ========= -->
+  <rect x="440" y="64" width="220" height="52" rx="10" fill="#4F46E5" stroke="#3730A3" stroke-width="2" filter="url(#shadow)"/>
+  <text x="550" y="85" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" font-weight="bold" fill="#FFFFFF">index.html + main.jsx</text>
+  <text x="550" y="101" text-anchor="middle" font-family="system-ui,sans-serif" font-size="9" fill="#C7D2FE">Vite entry point · React.StrictMode</text>
+
+  <!-- ========= APP.JSX / ROUTER ========= -->
+  <rect x="360" y="152" width="380" height="68" rx="10" fill="url(#grad-root)" stroke="#A78BFA" stroke-width="2" filter="url(#shadow)"/>
+  <text x="550" y="174" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" font-weight="bold" fill="#4C1D95">App.jsx  —  Hash-based Router</text>
+  <text x="550" y="191" text-anchor="middle" font-family="system-ui,sans-serif" font-size="9" fill="#6D28D9">#/  ·  #/upload  ·  #/results/:candidateId  ·  #/jobs</text>
+  <text x="550" y="207" text-anchor="middle" font-family="system-ui,sans-serif" font-size="9" fill="#6D28D9">Manages activeCandidateId state  ·  Renders &lt;Sidebar&gt; + active Page</text>
+
+  <!-- ========= LAYOUT LAYER ========= -->
+  <rect x="30" y="256" width="240" height="88" rx="10" fill="url(#grad-root)" stroke="#A78BFA" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="150" y="276" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" font-weight="bold" fill="#4C1D95">Layout Components</text>
+  <rect x="46" y="288" width="100" height="38" rx="6" fill="#FFFFFF" stroke="#C084FC" stroke-width="1.2" filter="url(#shadow)"/>
+  <text x="96" y="305" text-anchor="middle" font-family="system-ui,sans-serif" font-size="9" font-weight="bold" fill="#4C1D95">Sidebar.jsx</text>
+  <text x="96" y="318" text-anchor="middle" font-family="system-ui,sans-serif" font-size="8" fill="#7C3AED">Nav · Logo · Links</text>
+  <rect x="158" y="288" width="96" height="38" rx="6" fill="#FFFFFF" stroke="#C084FC" stroke-width="1.2" filter="url(#shadow)"/>
+  <text x="206" y="305" text-anchor="middle" font-family="system-ui,sans-serif" font-size="9" font-weight="bold" fill="#4C1D95">PageShell.jsx</text>
+  <text x="206" y="318" text-anchor="middle" font-family="system-ui,sans-serif" font-size="8" fill="#7C3AED">Header · Wrapper</text>
+
+  <!-- ========= PAGES CONTAINER ========= -->
+  <rect x="290" y="256" width="510" height="260" rx="10" fill="url(#grad-pages)" stroke="#93C5FD" stroke-width="2" filter="url(#shadow-strong)"/>
+  <text x="545" y="278" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" font-weight="bold" fill="#1D4ED8">Pages</text>
+
+  <!-- DashboardPage -->
+  <rect x="306" y="290" width="226" height="90" rx="8" fill="#FFFFFF" stroke="#60A5FA" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="419" y="309" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" font-weight="bold" fill="#1D4ED8">DashboardPage.jsx</text>
+  <text x="419" y="324" text-anchor="middle" font-family="system-ui,sans-serif" font-size="8.5" fill="#374151">StatCards  (Candidates / Jobs /</text>
+  <text x="419" y="337" text-anchor="middle" font-family="system-ui,sans-serif" font-size="8.5" fill="#374151">Matched)  ·  ProgressRing</text>
+  <text x="419" y="350" text-anchor="middle" font-family="system-ui,sans-serif" font-size="8.5" fill="#374151">DonutChart  ·  BarChart</text>
+  <text x="419" y="363" text-anchor="middle" font-family="system-ui,sans-serif" font-size="8.5" fill="#374151">HealthPulse  ·  GET /metrics · /health</text>
+
+  <!-- UploadPage -->
+  <rect x="548" y="290" width="236" height="90" rx="8" fill="#FFFFFF" stroke="#60A5FA" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="666" y="309" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" font-weight="bold" fill="#1D4ED8">UploadPage.jsx</text>
+  <text x="666" y="324" text-anchor="middle" font-family="system-ui,sans-serif" font-size="8.5" fill="#374151">Drag-and-drop PDF upload</text>
+  <text x="666" y="337" text-anchor="middle" font-family="system-ui,sans-serif" font-size="8.5" fill="#374151">Upload progress bar</text>
+  <text x="666" y="350" text-anchor="middle" font-family="system-ui,sans-serif" font-size="8.5" fill="#374151">POST /upload-resume</text>
+  <text x="666" y="363" text-anchor="middle" font-family="system-ui,sans-serif" font-size="8.5" fill="#374151">→ navigate to Results</text>
+
+  <!-- ResultsPage -->
+  <rect x="306" y="396" width="226" height="100" rx="8" fill="#FFFFFF" stroke="#60A5FA" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="419" y="415" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" font-weight="bold" fill="#1D4ED8">ResultsPage.jsx</text>
+  <text x="419" y="430" text-anchor="middle" font-family="system-ui,sans-serif" font-size="8.5" fill="#374151">Candidate selector</text>
+  <text x="419" y="443" text-anchor="middle" font-family="system-ui,sans-serif" font-size="8.5" fill="#374151">Parsed profile panel</text>
+  <text x="419" y="456" text-anchor="middle" font-family="system-ui,sans-serif" font-size="8.5" fill="#374151">Ranked match cards w/ scores</text>
+  <text x="419" y="469" text-anchor="middle" font-family="system-ui,sans-serif" font-size="8.5" fill="#374151">GET /candidate/:id/matches</text>
+  <text x="419" y="482" text-anchor="middle" font-family="system-ui,sans-serif" font-size="8.5" fill="#374151">GET /candidate/:id (status)</text>
+
+  <!-- JobsPage -->
+  <rect x="548" y="396" width="236" height="100" rx="8" fill="#FFFFFF" stroke="#60A5FA" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="666" y="415" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" font-weight="bold" fill="#1D4ED8">JobsPage.jsx</text>
+  <text x="666" y="430" text-anchor="middle" font-family="system-ui,sans-serif" font-size="8.5" fill="#374151">CSV upload (update / replace)</text>
+  <text x="666" y="443" text-anchor="middle" font-family="system-ui,sans-serif" font-size="8.5" fill="#374151">Embedding status polling</text>
+  <text x="666" y="456" text-anchor="middle" font-family="system-ui,sans-serif" font-size="8.5" fill="#374151">POST /jobs/upload</text>
+  <text x="666" y="469" text-anchor="middle" font-family="system-ui,sans-serif" font-size="8.5" fill="#374151">GET  /jobs/embedding-status</text>
+  <text x="666" y="482" text-anchor="middle" font-family="system-ui,sans-serif" font-size="8.5" fill="#374151">DELETE /jobs</text>
+
+  <!-- ========= DASHBOARD COMPONENTS ========= -->
+  <rect x="30" y="376" width="240" height="140" rx="10" fill="url(#grad-components)" stroke="#86EFAC" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="150" y="396" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" font-weight="bold" fill="#166534">Dashboard Components</text>
+  <rect x="42" y="406" width="100" height="30" rx="5" fill="#FFFFFF" stroke="#4ADE80" stroke-width="1.2" filter="url(#shadow)"/>
+  <text x="92" y="426" text-anchor="middle" font-family="system-ui,sans-serif" font-size="8.5" font-weight="bold" fill="#166534">StatCard.jsx</text>
+  <rect x="152" y="406" width="104" height="30" rx="5" fill="#FFFFFF" stroke="#4ADE80" stroke-width="1.2" filter="url(#shadow)"/>
+  <text x="204" y="426" text-anchor="middle" font-family="system-ui,sans-serif" font-size="8.5" font-weight="bold" fill="#166534">ProgressRing.jsx</text>
+  <rect x="42" y="444" width="100" height="30" rx="5" fill="#FFFFFF" stroke="#4ADE80" stroke-width="1.2" filter="url(#shadow)"/>
+  <text x="92" y="464" text-anchor="middle" font-family="system-ui,sans-serif" font-size="8.5" font-weight="bold" fill="#166534">DonutChart.jsx</text>
+  <rect x="152" y="444" width="104" height="30" rx="5" fill="#FFFFFF" stroke="#4ADE80" stroke-width="1.2" filter="url(#shadow)"/>
+  <text x="204" y="464" text-anchor="middle" font-family="system-ui,sans-serif" font-size="8.5" font-weight="bold" fill="#166534">BarChart.jsx</text>
+  <rect x="42" y="482" width="100" height="24" rx="5" fill="#FFFFFF" stroke="#4ADE80" stroke-width="1.2" filter="url(#shadow)"/>
+  <text x="92" y="498" text-anchor="middle" font-family="system-ui,sans-serif" font-size="8.5" font-weight="bold" fill="#166534">HealthPulse.jsx</text>
+
+  <!-- ========= HOOKS ========= -->
+  <rect x="820" y="256" width="240" height="120" rx="10" fill="url(#grad-hooks)" stroke="#FCA5A5" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="940" y="276" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" font-weight="bold" fill="#9A3412">Hooks</text>
+  <rect x="836" y="290" width="204" height="38" rx="6" fill="#FFFFFF" stroke="#FB923C" stroke-width="1.2" filter="url(#shadow)"/>
+  <text x="938" y="306" text-anchor="middle" font-family="system-ui,sans-serif" font-size="9" font-weight="bold" fill="#9A3412">useApi.js</text>
+  <text x="938" y="320" text-anchor="middle" font-family="system-ui,sans-serif" font-size="8" fill="#6B7280">fetch wrapper · loading · error state</text>
+  <rect x="836" y="336" width="204" height="30" rx="6" fill="#FFFFFF" stroke="#FB923C" stroke-width="1.2" filter="url(#shadow)"/>
+  <text x="938" y="348" text-anchor="middle" font-family="system-ui,sans-serif" font-size="9" font-weight="bold" fill="#9A3412">usePolling.js</text>
+  <text x="938" y="360" text-anchor="middle" font-family="system-ui,sans-serif" font-size="8" fill="#6B7280">setInterval poll for embedding status</text>
+
+  <!-- ========= CONFIG ========= -->
+  <rect x="820" y="396" width="240" height="160" rx="10" fill="url(#grad-config)" stroke="#E879F9" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="940" y="416" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" font-weight="bold" fill="#6B21A8">Config</text>
+  <rect x="836" y="428" width="90" height="28" rx="5" fill="#FFFFFF" stroke="#D946EF" stroke-width="1.2" filter="url(#shadow)"/>
+  <text x="881" y="446" text-anchor="middle" font-family="system-ui,sans-serif" font-size="8.5" font-weight="bold" fill="#6B21A8">endpoints.js</text>
+  <rect x="934" y="428" width="110" height="28" rx="5" fill="#FFFFFF" stroke="#D946EF" stroke-width="1.2" filter="url(#shadow)"/>
+  <text x="989" y="446" text-anchor="middle" font-family="system-ui,sans-serif" font-size="8.5" font-weight="bold" fill="#6B21A8">dashboard.js</text>
+  <rect x="836" y="464" width="90" height="28" rx="5" fill="#FFFFFF" stroke="#D946EF" stroke-width="1.2" filter="url(#shadow)"/>
+  <text x="881" y="482" text-anchor="middle" font-family="system-ui,sans-serif" font-size="8.5" font-weight="bold" fill="#6B21A8">theme.js</text>
+  <rect x="934" y="464" width="110" height="28" rx="5" fill="#FFFFFF" stroke="#D946EF" stroke-width="1.2" filter="url(#shadow)"/>
+  <text x="989" y="482" text-anchor="middle" font-family="system-ui,sans-serif" font-size="8.5" font-weight="bold" fill="#6B21A8">navigation.js</text>
+  <rect x="836" y="500" width="90" height="28" rx="5" fill="#FFFFFF" stroke="#D946EF" stroke-width="1.2" filter="url(#shadow)"/>
+  <text x="881" y="518" text-anchor="middle" font-family="system-ui,sans-serif" font-size="8.5" font-weight="bold" fill="#6B21A8">forms.js</text>
+
+  <!-- ========= VITE DEV PROXY ========= -->
+  <rect x="30" y="544" width="240" height="60" rx="10" fill="url(#grad-api)" stroke="#38BDF8" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="150" y="564" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" font-weight="bold" fill="#0369A1">Vite Dev Config</text>
+  <text x="150" y="580" text-anchor="middle" font-family="system-ui,sans-serif" font-size="8.5" fill="#0369A1">vite.config.js  ·  port 5173</text>
+  <text x="150" y="594" text-anchor="middle" font-family="system-ui,sans-serif" font-size="8.5" fill="#0369A1">VITE_API_URL → http://localhost:8000</text>
+
+  <!-- ========= FastAPI Backend box (external) ========= -->
+  <rect x="290" y="580" width="510" height="56" rx="10" fill="#1E293B" stroke="#475569" stroke-width="2" filter="url(#shadow)"/>
+  <text x="545" y="602" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" font-weight="bold" fill="#F8FAFC">FastAPI Backend  ·  http://localhost:8000</text>
+  <text x="545" y="620" text-anchor="middle" font-family="system-ui,sans-serif" font-size="9" fill="#94A3B8">/health  ·  /metrics  ·  /upload-resume  ·  /candidate/:id/*  ·  /jobs/*</text>
+
+  <!-- ========= index.css ========= -->
+  <rect x="820" y="580" width="240" height="56" rx="10" fill="#1E1B4B" stroke="#4338CA" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="940" y="602" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" font-weight="bold" fill="#E0E7FF">index.css</text>
+  <text x="940" y="618" text-anchor="middle" font-family="system-ui,sans-serif" font-size="8.5" fill="#A5B4FC">CSS custom properties · dark mode vars</text>
+  <text x="940" y="631" text-anchor="middle" font-family="system-ui,sans-serif" font-size="8.5" fill="#A5B4FC">component styles · animations</text>
+
+  <!-- ======================================================= -->
+  <!-- ARROWS                                                   -->
+  <!-- ======================================================= -->
+
+  <!-- main.jsx → App.jsx -->
+  <path d="M550,116 L550,144" fill="none" stroke="#4B5563" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="556" y="133" font-family="system-ui,sans-serif" font-size="9" fill="#6B7280">renders</text>
+
+  <!-- App.jsx → Layout -->
+  <path d="M368,206 L260,256 L260,280" fill="none" stroke="#7C3AED" stroke-width="1.4" marker-end="url(#arrow-violet)"/>
+  <text x="286" y="235" font-family="system-ui,sans-serif" font-size="8" fill="#7C3AED">always</text>
+
+  <!-- App.jsx → Pages -->
+  <path d="M550,220 L545,248" fill="none" stroke="#2563EB" stroke-width="1.4" marker-end="url(#arrow-blue)"/>
+  <text x="554" y="238" font-family="system-ui,sans-serif" font-size="8" fill="#2563EB">routes to</text>
+
+  <!-- App.jsx → Hooks -->
+  <path d="M736,185 L820,290" fill="none" stroke="#EA580C" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#arrow-orange)"/>
+  <text x="790" y="226" font-family="system-ui,sans-serif" font-size="8" fill="#EA580C">uses</text>
+
+  <!-- Pages → Dashboard Components -->
+  <path d="M294,350 L270,376" fill="none" stroke="#16A34A" stroke-width="1.4" marker-end="url(#arrow-green)"/>
+  <text x="249" y="362" font-family="system-ui,sans-serif" font-size="8" fill="#16A34A">uses</text>
+
+  <!-- Pages → FastAPI -->
+  <path d="M545,510 L545,572" fill="none" stroke="#4B5563" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="550" y="545" font-family="system-ui,sans-serif" font-size="8.5" fill="#4B5563">HTTP fetch</text>
+
+  <!-- Hooks → Pages (consumed by) -->
+  <path d="M820,296 L800,340" fill="none" stroke="#EA580C" stroke-width="1.2" stroke-dasharray="4,2" marker-end="url(#arrow-orange)"/>
+
+  <!-- Config → Hooks -->
+  <path d="M940,388 L940,374" fill="none" stroke="#7C3AED" stroke-width="1.2" marker-end="url(#arrow-violet)"/>
+  <text x="944" y="383" font-family="system-ui,sans-serif" font-size="8" fill="#7C3AED">used by</text>
+
+  <!-- Vite Config → Backend -->
+  <path d="M270,574 L290,600" fill="none" stroke="#0284C7" stroke-width="1.4" stroke-dasharray="4,2" marker-end="url(#arrow-blue)"/>
+  <text x="236" y="592" font-family="system-ui,sans-serif" font-size="8" fill="#0284C7">proxy in dev</text>
+
+  <!-- index.css → App.jsx (styled by) -->
+  <path d="M940,572 L736,218" fill="none" stroke="#4338CA" stroke-width="1.2" stroke-dasharray="4,2" marker-end="url(#arrow-violet)"/>
+
+  <!-- ======================================================= -->
+  <!-- LEGEND                                                   -->
+  <!-- ======================================================= -->
+  <rect x="30" y="660" width="1040" height="130" rx="10" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="550" y="682" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" font-weight="bold" fill="#1E293B">Legend</text>
+  <line x1="50" y1="690" x2="1050" y2="690" stroke="#E2E8F0" stroke-width="1"/>
+
+  <!-- Legend items -->
+  <rect x="50" y="700" width="18" height="18" rx="3" fill="#4F46E5"/>
+  <text x="76" y="713" font-family="system-ui,sans-serif" font-size="10" fill="#374151">Entry Point (Vite / React)</text>
+
+  <rect x="200" y="700" width="18" height="18" rx="3" fill="url(#grad-pages)" stroke="#93C5FD" stroke-width="1"/>
+  <text x="226" y="713" font-family="system-ui,sans-serif" font-size="10" fill="#374151">Pages (views / routes)</text>
+
+  <rect x="380" y="700" width="18" height="18" rx="3" fill="url(#grad-components)" stroke="#86EFAC" stroke-width="1"/>
+  <text x="406" y="713" font-family="system-ui,sans-serif" font-size="10" fill="#374151">Reusable Components</text>
+
+  <rect x="560" y="700" width="18" height="18" rx="3" fill="url(#grad-hooks)" stroke="#FCA5A5" stroke-width="1"/>
+  <text x="586" y="713" font-family="system-ui,sans-serif" font-size="10" fill="#374151">Hooks (logic)</text>
+
+  <rect x="700" y="700" width="18" height="18" rx="3" fill="url(#grad-config)" stroke="#E879F9" stroke-width="1"/>
+  <text x="726" y="713" font-family="system-ui,sans-serif" font-size="10" fill="#374151">Config / Constants</text>
+
+  <rect x="860" y="700" width="18" height="18" rx="3" fill="#1E293B"/>
+  <text x="886" y="713" font-family="system-ui,sans-serif" font-size="10" fill="#374151">External System</text>
+
+  <!-- Arrow legend -->
+  <line x1="50" y1="745" x2="78" y2="745" stroke="#4B5563" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="84" y="749" font-family="system-ui,sans-serif" font-size="10" fill="#374151">Synchronous render / dependency</text>
+
+  <line x1="280" y1="745" x2="308" y2="745" stroke="#4B5563" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#arrow)"/>
+  <text x="314" y="749" font-family="system-ui,sans-serif" font-size="10" fill="#374151">Asynchronous / indirect use</text>
+
+  <line x1="500" y1="745" x2="528" y2="745" stroke="#4B5563" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="534" y="749" font-family="system-ui,sans-serif" font-size="10" fill="#374151">HTTP fetch to backend</text>
+
+  <text x="50" y="775" font-family="system-ui,sans-serif" font-size="9" font-style="italic" fill="#94A3B8">All API calls go through useApi.js hook using endpoints defined in config/endpoints.js  ·  VITE_API_URL env var overrides default localhost:8000</text>
+</svg>

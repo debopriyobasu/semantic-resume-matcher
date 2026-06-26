@@ -54,12 +54,23 @@ Modern candidate screening pipelines face major operational hurdles:
 
 ## System Architecture
 
-Our multi-stage pipeline combines the raw speed of database-level vector indexing with the qualitative reasoning of local LLMs. The local system boundary isolates all PII and processing, executing entirely on your local machine:
+Our multi-stage pipeline combines the raw speed of database-level vector indexing with the qualitative reasoning of local LLMs. The local system boundary isolates all PII and processing, executing entirely on your local machine.
+
+### Combined System Overview
 
 ![System Architecture](docs/architecture.svg)
 
-> [!TIP]
-> **Interactive Diagram**: The system architecture diagram is available as an offline-editable Draw.io document. You can open and edit [docs/architecture.drawio](docs/architecture.drawio) using the desktop app, [draw.io web app](https://app.diagrams.net/), or the VS Code Draw.io extension.
+### Frontend Architecture
+
+Detailed view of the React SPA — pages, components, hooks, config, and API wiring:
+
+![Frontend Architecture](docs/architecture-frontend.svg)
+
+### Backend Architecture
+
+Detailed view of the FastAPI service layer, repositories, PostgreSQL/pgvector schema, and Ollama LLM engine:
+
+![Backend Architecture](docs/architecture-backend.svg)
 
 
 ---
